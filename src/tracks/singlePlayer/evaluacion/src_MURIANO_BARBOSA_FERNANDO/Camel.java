@@ -49,7 +49,7 @@ public class Camel extends AbstractPlayer{
         //Posicion del avatar
         Vector2d avatar =  new Vector2d(stateObs.getAvatarPosition().x / fescala.x, 
         		stateObs.getAvatarPosition().y / fescala.y);
-        
+
         //Probamos las cuatro acciones y calculamos la distancia del nuevo estado al portal.
         Vector2d newPos_up = avatar, newPos_down = avatar, newPos_left = avatar, newPos_right = avatar;
         if (avatar.y - 1 >= 0) {

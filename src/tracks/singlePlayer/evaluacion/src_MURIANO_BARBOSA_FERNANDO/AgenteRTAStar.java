@@ -10,7 +10,7 @@ import ontology.Types.ACTIONS;
 import tools.ElapsedCpuTimer;
 import tools.Vector2d;
 
-public class AgenteRTAStar {
+public class AgenteRTAStar extends AbstractPlayer{
 
     /**
 	 * initialize all variables for the agent
