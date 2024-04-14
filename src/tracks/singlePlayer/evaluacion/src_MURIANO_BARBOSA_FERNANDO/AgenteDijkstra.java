@@ -76,7 +76,6 @@ public class AgenteDijkstra extends AbstractPlayer{
 	 */
 	@Override
 	public ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
-        //ACTIONS accion = Types.ACTIONS.ACTION_NIL;
         if(acts.isEmpty()){
             long tInicio = System.nanoTime();
             Dijkstra(stateObs);
@@ -84,8 +83,7 @@ public class AgenteDijkstra extends AbstractPlayer{
             long tiempoTotalms = (tFin - tInicio)/1000000;
             System.out.printf("(runtime %d; nodos_expand: %d; l_camino: %d)",tiempoTotalms, nodo_expandidos, acts.size());
         }
-        //accion = acts.peek();
-        //acts.pop();
+
         return acts.pop();
     }
 
@@ -107,6 +105,8 @@ public class AgenteDijkstra extends AbstractPlayer{
         while (!Solucion_encontrada && !abiertos.isEmpty()) {
             abiertos.poll();
             cerrados.add(nodo_actual);
+
+            nodo_expandidos++;
 
             if(nodo_actual.jugador_en_meta(portal)){
                 Solucion_encontrada = true;
@@ -131,8 +131,8 @@ public class AgenteDijkstra extends AbstractPlayer{
             }
 
             if(!cerrados.contains(hijo_arriba) && expande){
-                nodo_expandidos++;
                 abiertos.add(hijo_arriba);
+                //System.out.printf("(%d,%d) (%d,%d)-> c: %d; h: %d = %d\n", (int) hijo_arriba.pos_jugador.x, (int) hijo_arriba.pos_jugador.y, (int) hijo_arriba.ori_jugador.x, (int) hijo_arriba.ori_jugador.y, hijo_arriba.coste, hijo_arriba.h, hijo_arriba.coste + hijo_arriba.h);
             }
 
             //expande abajo
@@ -153,8 +153,8 @@ public class AgenteDijkstra extends AbstractPlayer{
             }
 
             if(!cerrados.contains(hijo_abajo) && expande){
-                nodo_expandidos++;
                 abiertos.add(hijo_abajo);
+                //System.out.printf("(%d,%d) (%d,%d)-> c: %d; h: %d = %d\n", (int) hijo_abajo.pos_jugador.x, (int) hijo_abajo.pos_jugador.y, (int) hijo_abajo.ori_jugador.x, (int) hijo_abajo.ori_jugador.y, hijo_abajo.coste, hijo_abajo.h, hijo_abajo.coste + hijo_abajo.h);
             }
 
             //expande izq
@@ -175,8 +175,8 @@ public class AgenteDijkstra extends AbstractPlayer{
             }
 
             if(!cerrados.contains(hijo_izq) && expande){
-                nodo_expandidos++;
                 abiertos.add(hijo_izq);
+                //System.out.printf("(%d,%d) (%d,%d)-> c: %d; h: %d = %d\n", (int) hijo_izq.pos_jugador.x, (int) hijo_izq.pos_jugador.y, (int) hijo_izq.ori_jugador.x, (int) hijo_izq.ori_jugador.y, hijo_izq.coste, hijo_izq.h, hijo_izq.coste + hijo_izq.h);
             }
 
             //expande izq
@@ -197,8 +197,8 @@ public class AgenteDijkstra extends AbstractPlayer{
             }
 
             if(!cerrados.contains(hijo_der) && expande){
-                nodo_expandidos++;
                 abiertos.add(hijo_der);
+                //System.out.printf("(%d,%d) (%d,%d)-> c: %d; h: %d = %d\n", (int) hijo_der.pos_jugador.x, (int) hijo_der.pos_jugador.y, (int) hijo_der.ori_jugador.x, (int) hijo_der.ori_jugador.y, hijo_der.coste, hijo_der.h, hijo_der.coste + hijo_der.h);
             }
 
             if(!abiertos.isEmpty()){
