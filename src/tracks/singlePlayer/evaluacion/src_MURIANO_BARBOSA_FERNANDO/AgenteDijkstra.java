@@ -121,12 +121,13 @@ public class AgenteDijkstra extends AbstractPlayer{
             hijo_arriba.ori_jugador.x = 0;
             hijo_arriba.ori_jugador.y = -1;
             hijo_arriba.pos_jugador.x = nodo_actual.pos_jugador.x;
-            hijo_arriba.pos_jugador.y = nodo_actual.pos_jugador.y;
+            hijo_arriba.pos_jugador.y = nodo_actual.pos_jugador.y - 1;
             expande = true;
-            if(nodo_actual.ori_jugador.y == -1 && mapa_visitables[(int) nodo_actual.pos_jugador.x][(int) nodo_actual.pos_jugador.y - 1]){
-                hijo_arriba.pos_jugador.y -= 1;
-            }else if(nodo_actual.ori_jugador.y == -1){
+            if(!mapa_visitables[(int) hijo_arriba.pos_jugador.x][(int) hijo_arriba.pos_jugador.y]){
                 expande = false;
+            }else if(!hijo_arriba.ori_jugador.equals(nodo_actual.ori_jugador)){
+                hijo_arriba.accion_giro = Types.ACTIONS.ACTION_UP;
+                hijo_arriba.coste += 1;
             }
 
             if(!cerrados.contains(hijo_arriba) && expande){
@@ -142,12 +143,13 @@ public class AgenteDijkstra extends AbstractPlayer{
             hijo_abajo.ori_jugador.x = 0;
             hijo_abajo.ori_jugador.y = 1;
             hijo_abajo.pos_jugador.x = nodo_actual.pos_jugador.x;
-            hijo_abajo.pos_jugador.y = nodo_actual.pos_jugador.y;
+            hijo_abajo.pos_jugador.y = nodo_actual.pos_jugador.y + 1;
             expande = true;
-            if(nodo_actual.ori_jugador.y == 1 && mapa_visitables[(int) nodo_actual.pos_jugador.x][(int) nodo_actual.pos_jugador.y + 1]){
-                hijo_abajo.pos_jugador.y += 1;
-            }else if(nodo_actual.ori_jugador.y == 1){
+            if(!mapa_visitables[(int) hijo_abajo.pos_jugador.x][(int) hijo_abajo.pos_jugador.y]){
                 expande = false;
+            }else if(!hijo_abajo.ori_jugador.equals(nodo_actual.ori_jugador)){
+                hijo_abajo.accion_giro = Types.ACTIONS.ACTION_DOWN;
+                hijo_abajo.coste += 1;
             }
 
             if(!cerrados.contains(hijo_abajo) && expande){
@@ -162,13 +164,14 @@ public class AgenteDijkstra extends AbstractPlayer{
             hijo_izq.coste = nodo_actual.coste + 1;
             hijo_izq.ori_jugador.x = -1;
             hijo_izq.ori_jugador.y = 0;
-            hijo_izq.pos_jugador.x = nodo_actual.pos_jugador.x;
+            hijo_izq.pos_jugador.x = nodo_actual.pos_jugador.x - 1;
             hijo_izq.pos_jugador.y = nodo_actual.pos_jugador.y;
             expande = true;
-            if(nodo_actual.ori_jugador.x == -1 && mapa_visitables[(int) nodo_actual.pos_jugador.x - 1][(int) nodo_actual.pos_jugador.y]){
-                hijo_izq.pos_jugador.x -= 1;
-            }else if (nodo_actual.ori_jugador.x == -1){
+            if(!mapa_visitables[(int) hijo_izq.pos_jugador.x][(int) hijo_izq.pos_jugador.y]){
                 expande = false;
+            }else if(!hijo_izq.ori_jugador.equals(nodo_actual.ori_jugador)){
+                hijo_izq.accion_giro = Types.ACTIONS.ACTION_LEFT;
+                hijo_izq.coste += 1;
             }
 
             if(!cerrados.contains(hijo_izq) && expande){
@@ -183,13 +186,14 @@ public class AgenteDijkstra extends AbstractPlayer{
             hijo_der.coste = nodo_actual.coste + 1;
             hijo_der.ori_jugador.x = 1;
             hijo_der.ori_jugador.y = 0;
-            hijo_der.pos_jugador.x = nodo_actual.pos_jugador.x;
+            hijo_der.pos_jugador.x = nodo_actual.pos_jugador.x + 1;
             hijo_der.pos_jugador.y = nodo_actual.pos_jugador.y;
             expande = true;
-            if(nodo_actual.ori_jugador.x == 1 && mapa_visitables[(int) nodo_actual.pos_jugador.x + 1][(int) nodo_actual.pos_jugador.y]){
-                hijo_der.pos_jugador.x += 1;
-            }else if(nodo_actual.ori_jugador.x == 1){
+            if(!mapa_visitables[(int) hijo_der.pos_jugador.x][(int) hijo_der.pos_jugador.y]){
                 expande = false;
+            }else if(!hijo_der.ori_jugador.equals(nodo_actual.ori_jugador)){
+                hijo_der.accion_giro = Types.ACTIONS.ACTION_RIGHT;
+                hijo_der.coste += 1;
             }
 
             if(!cerrados.contains(hijo_der) && expande){
@@ -210,6 +214,7 @@ public class AgenteDijkstra extends AbstractPlayer{
 
         if(Solucion_encontrada){
             while(nodo_actual.padre != null){
+                if(nodo_actual.accion_giro != null) acts.push(nodo_actual.accion_giro);
                 acts.push(nodo_actual.accion_desde_padre);
                 nodo_actual = nodo_actual.padre;
             }
