@@ -1,4 +1,5 @@
 package tracks.singlePlayer.evaluacion.src_MURIANO_BARBOSA_FERNANDO;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -10,81 +11,24 @@ import ontology.Types.ACTIONS;
 import tools.ElapsedCpuTimer;
 import tools.Vector2d;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
+import java.util.function.BiConsumer;
+
+import javax.swing.Action;
 
 import java.util.PriorityQueue;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import java.util.List;
+public class AgenteDijkstra extends AbstractPlayer{
 
-public class AgenteDijkstra extends AbstractPlayer {
+    Vector2d fescala;
+    Vector2d portal;
+    boolean [][] mapa_visitables;
+    Stack<ACTIONS> acts;
 
-
-
-	private class Nodo implements Comparable<Nodo>{
-		public Queue<ACTIONS> act_al_nodo;
-		public StateObservation estado_general;
-		public int coste;
-
-		public Nodo(Queue<ACTIONS> lista_acciones, StateObservation estado, int c){
-			act_al_nodo = new LinkedList<>(lista_acciones);
-			estado_general = estado.copy();
-			coste = c;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) return true;
-			if (obj == null || getClass() != obj.getClass()) return false;
-			Nodo o = (Nodo) obj;
-			return 	estado_general.getAvatarPosition().equals(o.estado_general.getAvatarPosition()) && 
-					estado_general.getAvatarOrientation().equals(o.estado_general.getAvatarOrientation()) && estado_general.getGameWinner() == o.estado_general.getGameWinner() ;
-		}
-		
-		@Override
-		public int hashCode() {
-			int prime = 31;
-			int result = 17;
-			long temp;
-			temp = Double.doubleToLongBits(estado_general.getAvatarPosition().x);
-        	result = prime * result + (int) (temp ^ (temp >>> 32));
-
-			temp = Double.doubleToLongBits(estado_general.getAvatarPosition().y);
-        	result = prime * result + (int) (temp ^ (temp >>> 32));
-
-			temp = Double.doubleToLongBits(estado_general.getAvatarOrientation().x);
-        	result = prime * result + (int) (temp ^ (temp >>> 32));
-
-			temp = Double.doubleToLongBits(estado_general.getAvatarOrientation().y);
-        	result = prime * result + (int) (temp ^ (temp >>> 32));
-
-			if(estado_general.getGameWinner() == Types.WINNER.PLAYER_WINS){
-				result = result + 1;
-			}
-
-			return result;
-		}
-
-		@Override
-		public int compareTo(Nodo o) {
-			return Integer.compare(coste, o.coste);
-		}
-
-		public boolean jugador_en_meta(){
-			if(estado_general.getGameWinner() == Types.WINNER.PLAYER_WINS){
-				return true;
-			}else{
-				return false;
-			}
-		}
-	}
-
-	Vector2d fescala;
-	Vector2d portal;
-	Queue<ACTIONS> lista_de_acciones;
+    int nodo_expandidos;
 
     /**
 	 * initialize all variables for the agent
@@ -92,7 +36,7 @@ public class AgenteDijkstra extends AbstractPlayer {
      * @param elapsedTimer Timer when the action returned is due.
 	 */
 	public AgenteDijkstra(StateObservation stateObs, ElapsedCpuTimer elapsedTimer){
-		//Calculamos el factor de escala entre mundos (pixeles -> grid)
+        //Calculamos el factor de escala entre mundos (pixeles -> grid)
         fescala = new Vector2d(stateObs.getWorldDimension().width / stateObs.getObservationGrid().length , 
         		stateObs.getWorldDimension().height / stateObs.getObservationGrid()[0].length);      
 
@@ -103,9 +47,40 @@ public class AgenteDijkstra extends AbstractPlayer {
         portal.x = Math.floor(portal.x / fescala.x);
         portal.y = Math.floor(portal.y / fescala.y);
 
-		lista_de_acciones = new LinkedList<>();
-	}
+        mapa_visitables = new boolean[stateObs.getObservationGrid().length][stateObs.getObservationGrid()[0].length];
 
+        ArrayList<Observation>[] lista_no_pasar = stateObs.getImmovablePositions();
+        for(int x = 0; x < mapa_visitables.length; x++){
+            for(int y = 0; y < mapa_visitables[0].length; y++){
+                mapa_visitables[x][y] = true;
+            }
+        }
+
+        for(int i = 0; i < lista_no_pasar[0].size();i++){   //murons
+            mapa_visitables[(int) (lista_no_pasar[0].get(i).position.x / fescala.x)] [(int) (lista_no_pasar[0].get(i).position.y/fescala.x)] = false;
+        }
+        for(int i = 0; i < lista_no_pasar[1].size();i++){   //trampas
+            mapa_visitables[(int) (lista_no_pasar[1].get(i).position.x / fescala.x)] [(int) (lista_no_pasar[1].get(i).position.y/fescala.x)] = false;
+        }
+
+        acts = new Stack<>();
+        nodo_expandidos = 0;
+
+        /* 
+        //print mapa bool
+        for(int x = 0; x < mapa_visitables.length; x++){
+            System.out.print("[");
+            for(int y = 0; y < mapa_visitables[0].length; y++){
+                System.out.print(mapa_visitables[x][y]);
+                System.out.print("\t");
+            }
+            System.out.print("]\n");
+        }
+        */
+
+        //Dijkstra(stateObs);
+       
+    }
 
     /**
 	 * return the best action to arrive faster to the closest portal
@@ -115,88 +90,150 @@ public class AgenteDijkstra extends AbstractPlayer {
 	 */
 	@Override
 	public ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
-		if(lista_de_acciones.isEmpty()){
-			Dijkstra(stateObs);
-		}
-        return lista_de_acciones.poll();
+        ACTIONS accion = Types.ACTIONS.ACTION_NIL;
+        if(acts.isEmpty()){
+            Dijkstra(stateObs);
+           System.out.print(nodo_expandidos);
+        }
+        accion = acts.peek();
+        acts.pop();
+        return accion;
     }
 
+    private void Dijkstra(StateObservation stateObs){
+        Set<Nodo> cerrados = new HashSet<>();
+		PriorityQueue<Nodo> abiertos = new PriorityQueue<>();
 
-	private void Dijkstra(StateObservation stateObs){
-		Set<Nodo> cerrados = new HashSet<>();
-		//List<Nodo> cerrados = new ArrayList<>();
-		PriorityQueue<Nodo> abierotos = new PriorityQueue<>();
+        Nodo nodo_actual = new Nodo();
+        nodo_actual.pos_jugador.x = stateObs.getAvatarPosition().x / fescala.x;
+        nodo_actual.pos_jugador.y = stateObs.getAvatarPosition().y / fescala.y;
+        nodo_actual.ori_jugador = stateObs.getAvatarOrientation().copy();
 
-		Nodo nodo_actual = new Nodo(new LinkedList<>(), stateObs, 0);
+        boolean Solucion_encontrada = nodo_actual.jugador_en_meta(portal);
 
-		abierotos.add(nodo_actual);
+        boolean expande;
 
-		boolean Solucion_encontrada = nodo_actual.jugador_en_meta();
+        abiertos.add(nodo_actual);
 
-		while (!Solucion_encontrada && !abierotos.isEmpty()) {
-			abierotos.poll();
-			cerrados.add(nodo_actual);
-			//System.out.printf("(%f,%f)\t",nodo_actual.estado_general.getAvatarPosition().x / fescala.x, nodo_actual.estado_general.getAvatarPosition().y / fescala.y);
-			//System.out.printf("(%f,%f)\n",nodo_actual.estado_general.getAvatarOrientation().x, nodo_actual.estado_general.getAvatarOrientation().y);
+        while (!Solucion_encontrada && !abiertos.isEmpty()) {
+            abiertos.poll();
+            cerrados.add(nodo_actual);
 
-			if(nodo_actual.jugador_en_meta()){
-				Solucion_encontrada = true;
-			}else{
-				ArrayList<ACTIONS> acciones_posibles =	nodo_actual.estado_general.getAvailableActions();
+            //System.out.printf("(%f,%f)\t",nodo_actual.pos_jugador.x, nodo_actual.pos_jugador.y);
+			//System.out.printf("(%f,%f)\n",nodo_actual.ori_jugador.x, nodo_actual.ori_jugador.y);
 
-				if(acciones_posibles.contains(Types.ACTIONS.ACTION_UP)){
-					//genera hijo arriba
-					Nodo hijo_arriba = new Nodo(nodo_actual.act_al_nodo, nodo_actual.estado_general, nodo_actual.coste + 1);
-					hijo_arriba.estado_general.advance(Types.ACTIONS.ACTION_UP);
-					hijo_arriba.act_al_nodo.add(Types.ACTIONS.ACTION_UP);
-					if(!cerrados.contains(hijo_arriba)){
-						abierotos.add(hijo_arriba);
-					}
-				}
-				
-				if(acciones_posibles.contains(Types.ACTIONS.ACTION_DOWN)){
-					//genera hijo abajo
-					Nodo hijo_abajo = new Nodo(nodo_actual.act_al_nodo, nodo_actual.estado_general, nodo_actual.coste + 1);
-					hijo_abajo.estado_general.advance(Types.ACTIONS.ACTION_DOWN);
-					hijo_abajo.act_al_nodo.add(Types.ACTIONS.ACTION_DOWN);
-					if(!cerrados.contains(hijo_abajo)){
-						abierotos.add(hijo_abajo);
-					}
-				}
+            if(nodo_actual.jugador_en_meta(portal)){
+                Solucion_encontrada = true;
+                //System.out.printf("-<(%f,%f)\t",nodo_actual.pos_jugador.x, nodo_actual.pos_jugador.y);
+			    //System.out.printf("(%f,%f)>-\n",nodo_actual.ori_jugador.x, nodo_actual.ori_jugador.y);
+                break;
+            }
 
-				if(acciones_posibles.contains(Types.ACTIONS.ACTION_LEFT)){
-					//genera hijo izqu
-					Nodo hijo_izqu = new Nodo(nodo_actual.act_al_nodo, nodo_actual.estado_general, nodo_actual.coste + 1);
-					hijo_izqu.estado_general.advance(Types.ACTIONS.ACTION_LEFT);
-					hijo_izqu.act_al_nodo.add(Types.ACTIONS.ACTION_LEFT);
-					if(!cerrados.contains(hijo_izqu)){
-						abierotos.add(hijo_izqu);
-					}
-				}
-				
-				if(acciones_posibles.contains(Types.ACTIONS.ACTION_RIGHT)){
-					//genera hijo dere
-					Nodo hijo_dere = new Nodo(nodo_actual.act_al_nodo, nodo_actual.estado_general, nodo_actual.coste + 1);
-					hijo_dere.estado_general.advance(Types.ACTIONS.ACTION_RIGHT);
-					hijo_dere.act_al_nodo.add(Types.ACTIONS.ACTION_RIGHT);
-					if(!cerrados.contains(hijo_dere)){
-						abierotos.add(hijo_dere);
-					}
-				}
-			}
+            //expande arriba
+            Nodo hijo_arriba = new Nodo();
+            hijo_arriba.padre = nodo_actual;
+            hijo_arriba.accion_desde_padre = Types.ACTIONS.ACTION_UP;
+            hijo_arriba.coste = nodo_actual.coste + 1;
+            hijo_arriba.ori_jugador.x = 0;
+            hijo_arriba.ori_jugador.y = -1;
+            hijo_arriba.pos_jugador.x = nodo_actual.pos_jugador.x;
+            hijo_arriba.pos_jugador.y = nodo_actual.pos_jugador.y;
+            expande = true;
+            if(nodo_actual.ori_jugador.y == -1 && mapa_visitables[(int) nodo_actual.pos_jugador.x][(int) nodo_actual.pos_jugador.y - 1]){
+                hijo_arriba.pos_jugador.y -= 1;
+            }else if(nodo_actual.ori_jugador.y == -1){
+                expande = false;
+            }
 
-			if(!Solucion_encontrada && !abierotos.isEmpty()){
-				nodo_actual = abierotos.peek();
-				while(!abierotos.isEmpty() && cerrados.contains(nodo_actual)){
-					abierotos.poll();
-					if(!abierotos.isEmpty()){
-						nodo_actual = abierotos.peek();
-					}
-				}
-			}
-		}
-		if(Solucion_encontrada){
-			lista_de_acciones = new LinkedList<>(nodo_actual.act_al_nodo);
-		}
-	}
+            if(!cerrados.contains(hijo_arriba) && expande){
+                nodo_expandidos++;
+                abiertos.add(hijo_arriba);
+            }
+
+            //expande abajo
+            Nodo hijo_abajo = new Nodo();
+            hijo_abajo.padre = nodo_actual;
+            hijo_abajo.accion_desde_padre = Types.ACTIONS.ACTION_DOWN;
+            hijo_abajo.coste = nodo_actual.coste + 1;
+            hijo_abajo.ori_jugador.x = 0;
+            hijo_abajo.ori_jugador.y = 1;
+            hijo_abajo.pos_jugador.x = nodo_actual.pos_jugador.x;
+            hijo_abajo.pos_jugador.y = nodo_actual.pos_jugador.y;
+            expande = true;
+            if(nodo_actual.ori_jugador.y == 1 && mapa_visitables[(int) nodo_actual.pos_jugador.x][(int) nodo_actual.pos_jugador.y + 1]){
+                hijo_abajo.pos_jugador.y += 1;
+            }else if(nodo_actual.ori_jugador.y == 1){
+                expande = false;
+            }
+
+            if(!cerrados.contains(hijo_abajo) && expande){
+                nodo_expandidos++;
+                abiertos.add(hijo_abajo);
+            }
+
+            //expande izq
+            Nodo hijo_izq = new Nodo();
+            hijo_izq.padre = nodo_actual;
+            hijo_izq.accion_desde_padre = Types.ACTIONS.ACTION_LEFT;
+            hijo_izq.coste = nodo_actual.coste + 1;
+            hijo_izq.ori_jugador.x = -1;
+            hijo_izq.ori_jugador.y = 0;
+            hijo_izq.pos_jugador.x = nodo_actual.pos_jugador.x;
+            hijo_izq.pos_jugador.y = nodo_actual.pos_jugador.y;
+            expande = true;
+            if(nodo_actual.ori_jugador.x == -1 && mapa_visitables[(int) nodo_actual.pos_jugador.x - 1][(int) nodo_actual.pos_jugador.y]){
+                hijo_izq.pos_jugador.x -= 1;
+            }else if (nodo_actual.ori_jugador.x == -1){
+                expande = false;
+            }
+
+            if(!cerrados.contains(hijo_izq) && expande){
+                nodo_expandidos++;
+                abiertos.add(hijo_izq);
+            }
+
+            //expande izq
+            Nodo hijo_der = new Nodo();
+            hijo_der.padre = nodo_actual;
+            hijo_der.accion_desde_padre = Types.ACTIONS.ACTION_RIGHT;
+            hijo_der.coste = nodo_actual.coste + 1;
+            hijo_der.ori_jugador.x = 1;
+            hijo_der.ori_jugador.y = 0;
+            hijo_der.pos_jugador.x = nodo_actual.pos_jugador.x;
+            hijo_der.pos_jugador.y = nodo_actual.pos_jugador.y;
+            expande = true;
+            if(nodo_actual.ori_jugador.x == 1 && mapa_visitables[(int) nodo_actual.pos_jugador.x + 1][(int) nodo_actual.pos_jugador.y]){
+                hijo_der.pos_jugador.x += 1;
+            }else if(nodo_actual.ori_jugador.x == 1){
+                expande = false;
+            }
+
+            if(!cerrados.contains(hijo_der) && expande){
+                nodo_expandidos++;
+                abiertos.add(hijo_der);
+            }
+
+            if(!abiertos.isEmpty()){
+                nodo_actual = abiertos.peek();
+                while (cerrados.contains(nodo_actual) && !abiertos.isEmpty()){
+                    abiertos.poll();
+                    if(!abiertos.isEmpty()) nodo_actual = abiertos.peek();
+                    
+                }
+            }
+            
+        }
+
+        if(Solucion_encontrada){
+            while(nodo_actual.padre != null){
+                acts.push(nodo_actual.accion_desde_padre);
+                nodo_actual = nodo_actual.padre;
+            }
+        }else{
+            System.out.println("no se encuentra la solucion");
+        }
+
+        
+    }
+    
 }
