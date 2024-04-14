@@ -17,6 +17,8 @@ public class Nodo implements Comparable<Nodo>{
     public Nodo padre;
     public ACTIONS accion_desde_padre;
 
+    public ACTIONS accion_giro;
+
     public Vector2d pos_jugador;
     public Vector2d ori_jugador;
 
@@ -26,6 +28,7 @@ public class Nodo implements Comparable<Nodo>{
     public Nodo(){
         padre = null;
         accion_desde_padre = null;
+        accion_giro = null;
         pos_jugador = new Vector2d();
         ori_jugador = new Vector2d();
         coste = 0;

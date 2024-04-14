@@ -65,20 +65,6 @@ public class AgenteDijkstra extends AbstractPlayer{
 
         acts = new Stack<>();
         nodo_expandidos = 0;
-
-        /* 
-        //print mapa bool
-        for(int x = 0; x < mapa_visitables.length; x++){
-            System.out.print("[");
-            for(int y = 0; y < mapa_visitables[0].length; y++){
-                System.out.print(mapa_visitables[x][y]);
-                System.out.print("\t");
-            }
-            System.out.print("]\n");
-        }
-        */
-
-        //Dijkstra(stateObs);
        
     }
 
@@ -90,14 +76,17 @@ public class AgenteDijkstra extends AbstractPlayer{
 	 */
 	@Override
 	public ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
-        ACTIONS accion = Types.ACTIONS.ACTION_NIL;
+        //ACTIONS accion = Types.ACTIONS.ACTION_NIL;
         if(acts.isEmpty()){
+            long tInicio = System.nanoTime();
             Dijkstra(stateObs);
-           System.out.print(nodo_expandidos);
+            long tFin = System.nanoTime();
+            long tiempoTotalms = (tFin - tInicio)/1000000;
+            System.out.printf("(runtime %d; nodos_expand: %d; l_camino: %d)",tiempoTotalms, nodo_expandidos, acts.size());
         }
-        accion = acts.peek();
-        acts.pop();
-        return accion;
+        //accion = acts.peek();
+        //acts.pop();
+        return acts.pop();
     }
 
     private void Dijkstra(StateObservation stateObs){
@@ -119,13 +108,8 @@ public class AgenteDijkstra extends AbstractPlayer{
             abiertos.poll();
             cerrados.add(nodo_actual);
 
-            //System.out.printf("(%f,%f)\t",nodo_actual.pos_jugador.x, nodo_actual.pos_jugador.y);
-			//System.out.printf("(%f,%f)\n",nodo_actual.ori_jugador.x, nodo_actual.ori_jugador.y);
-
             if(nodo_actual.jugador_en_meta(portal)){
                 Solucion_encontrada = true;
-                //System.out.printf("-<(%f,%f)\t",nodo_actual.pos_jugador.x, nodo_actual.pos_jugador.y);
-			    //System.out.printf("(%f,%f)>-\n",nodo_actual.ori_jugador.x, nodo_actual.ori_jugador.y);
                 break;
             }
 
@@ -229,11 +213,7 @@ public class AgenteDijkstra extends AbstractPlayer{
                 acts.push(nodo_actual.accion_desde_padre);
                 nodo_actual = nodo_actual.padre;
             }
-        }else{
-            System.out.println("no se encuentra la solucion");
         }
-
-        
     }
     
 }
