@@ -95,7 +95,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 		}else{
 			repite = false;
 		}
-		System.err.print(accion + "\n");
+		//System.err.print(accion + "\n");
         return accion;
     }
 
@@ -120,7 +120,6 @@ public class AgenteRTAStar extends AbstractPlayer{
 				c_mas_h_arriba += 1;
 			}else{
 				c_mas_h_arriba += 2;
-				repite = true;
 			}
 		}
 
@@ -131,7 +130,6 @@ public class AgenteRTAStar extends AbstractPlayer{
 				c_mas_h_abajo += 1;
 			}else{
 				c_mas_h_abajo += 2;
-				repite = true;
 			}
 			
 		}
@@ -143,7 +141,6 @@ public class AgenteRTAStar extends AbstractPlayer{
 				c_mas_h_izquierda += 1;
 			}else{
 				c_mas_h_izquierda += 2;
-				repite = true;
 			}
 			
 		}
@@ -155,7 +152,6 @@ public class AgenteRTAStar extends AbstractPlayer{
 				c_mas_h_derecha += 1;
 			}else{
 				c_mas_h_derecha += 2;
-				repite = true;
 			}
 			
 		}
@@ -164,13 +160,8 @@ public class AgenteRTAStar extends AbstractPlayer{
 
 		int minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), Math.min(c_mas_h_izquierda, c_mas_h_derecha));
 		int segundo_minimo = 0;
-		System.out.printf("(%d,%d) - ari: %d; aba: %d; izq: %d; der: %d; ->min %d\n", (int) estado_actual.pos_jugador.x, (int) estado_actual.pos_jugador.y, c_mas_h_arriba, c_mas_h_abajo, c_mas_h_izquierda, c_mas_h_derecha, minimo);
-		for(int x = 0; x < mapa_visitables.length; x++){
-            for(int y = 0; y < mapa_visitables[0].length; y++){
-                System.out.printf("%d\t", mapa_h[x][y] );
-            }
-			System.out.printf("\n");
-        }
+		//System.out.printf("(%d,%d) - ari: %d; aba: %d; izq: %d; der: %d; ->min %d\n", (int) estado_actual.pos_jugador.x, (int) estado_actual.pos_jugador.y, c_mas_h_arriba, c_mas_h_abajo, c_mas_h_izquierda, c_mas_h_derecha, minimo);
+		
 
 		if(c_mas_h_arriba == minimo){
 			accion = Types.ACTIONS.ACTION_UP;
@@ -180,6 +171,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 			}else{
 				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y] = c_mas_h_arriba;
 			}
+			if(estado_actual.ori_jugador.y != -1) repite = true;
 			estado_actual.pos_jugador.y -= 1;
 			estado_actual.ori_jugador.x = 0;
 			estado_actual.ori_jugador.y = -1;
@@ -191,6 +183,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 			}else{
 				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y] = c_mas_h_abajo;
 			}
+			if(estado_actual.ori_jugador.y != 1) repite = true;
 			estado_actual.pos_jugador.y += 1;
 			estado_actual.ori_jugador.x = 0;
 			estado_actual.ori_jugador.y = 1;
@@ -202,6 +195,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 			}else{
 				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y] = c_mas_h_izquierda;
 			}
+			if(estado_actual.ori_jugador.x != -1) repite = true;
 			estado_actual.pos_jugador.x -= 1;
 			estado_actual.ori_jugador.x = -1;
 			estado_actual.ori_jugador.y = 0;
@@ -213,6 +207,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 			}else{
 				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y] = c_mas_h_derecha;
 			}
+			if(estado_actual.ori_jugador.x != 1) repite = true;
 			estado_actual.pos_jugador.x += 1;
 			estado_actual.ori_jugador.x = 1;
 			estado_actual.ori_jugador.y = 0;
