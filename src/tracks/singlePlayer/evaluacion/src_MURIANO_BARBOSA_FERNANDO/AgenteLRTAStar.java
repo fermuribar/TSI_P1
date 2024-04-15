@@ -58,13 +58,14 @@ public class AgenteLRTAStar extends AbstractPlayer{
             mapa_visitables[(int) (lista_no_pasar[1].get(i).position.x / fescala.x)] [(int) (lista_no_pasar[1].get(i).position.y/fescala.x)] = false;
         }
 
-
+		/*
 		for(int x = 0; x < mapa_visitables.length; x++){
             for(int y = 0; y < mapa_visitables[0].length; y++){
                 System.out.printf("%d\t", mapa_h[x][y] );
             }
 			System.out.printf("\n");
         }
+		*/
 		estado_actual = new Nodo();
 		estado_actual.pos_jugador.x = stateObs.getAvatarPosition().x / fescala.x;
         estado_actual.pos_jugador.y = stateObs.getAvatarPosition().y / fescala.y;
@@ -88,7 +89,7 @@ public class AgenteLRTAStar extends AbstractPlayer{
 	public ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
 		if(!repite){
 			long tInicio = System.nanoTime();
-			RTAStar();
+			RTAStar(stateObs);
 			long tFin = System.nanoTime();
 			tiempoTotalms += (tFin - tInicio)/1000000;
 			System.out.printf("(runtime %d; nodos_expand: %d)\n",tiempoTotalms, nodo_expandidos);
@@ -103,7 +104,14 @@ public class AgenteLRTAStar extends AbstractPlayer{
 	ACTIONS accion;
 	long tiempoTotalms;
 
-	private void RTAStar(){
+	private void RTAStar(StateObservation stateObs){
+		ArrayList<Observation>[] lista_no_pasar = stateObs.getImmovablePositions();
+		for(int i = 0; i < lista_no_pasar[0].size();i++){   //murons
+            mapa_visitables[(int) (lista_no_pasar[0].get(i).position.x / fescala.x)] [(int) (lista_no_pasar[0].get(i).position.y/fescala.x)] = false;
+        }
+        for(int i = 0; i < lista_no_pasar[1].size();i++){   //trampas
+            mapa_visitables[(int) (lista_no_pasar[1].get(i).position.x / fescala.x)] [(int) (lista_no_pasar[1].get(i).position.y/fescala.x)] = false;
+        }
 		int c_mas_h_arriba = 100000;
 		int c_mas_h_abajo = 100000;
 		int c_mas_h_izquierda = 100000;
@@ -159,13 +167,11 @@ public class AgenteLRTAStar extends AbstractPlayer{
 		//cual maximo
 
 		int minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), Math.min(c_mas_h_izquierda, c_mas_h_derecha));
-		int segundo_minimo = 0;
 		//System.out.printf("(%d,%d) - ari: %d; aba: %d; izq: %d; der: %d; ->min %d\n", (int) estado_actual.pos_jugador.x, (int) estado_actual.pos_jugador.y, c_mas_h_arriba, c_mas_h_abajo, c_mas_h_izquierda, c_mas_h_derecha, minimo);
 		
 
 		if(c_mas_h_arriba == minimo){
 			accion = Types.ACTIONS.ACTION_UP;
-			segundo_minimo = Math.min(c_mas_h_abajo, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
 				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y] = c_mas_h_arriba;
 			if(estado_actual.ori_jugador.y != -1) repite = true;
 			estado_actual.pos_jugador.y -= 1;
@@ -173,7 +179,6 @@ public class AgenteLRTAStar extends AbstractPlayer{
 			estado_actual.ori_jugador.y = -1;
 		}else if(c_mas_h_abajo == minimo){
 			accion = Types.ACTIONS.ACTION_DOWN;
-			segundo_minimo = Math.min(c_mas_h_arriba, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
 				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y] = c_mas_h_abajo;
 			if(estado_actual.ori_jugador.y != 1) repite = true;
 			estado_actual.pos_jugador.y += 1;
@@ -181,7 +186,6 @@ public class AgenteLRTAStar extends AbstractPlayer{
 			estado_actual.ori_jugador.y = 1;
 		}else if(c_mas_h_izquierda == minimo){
 			accion = Types.ACTIONS.ACTION_LEFT;
-			segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_derecha);
 				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y] = c_mas_h_izquierda;
 			if(estado_actual.ori_jugador.x != -1) repite = true;
 			estado_actual.pos_jugador.x -= 1;
@@ -189,7 +193,6 @@ public class AgenteLRTAStar extends AbstractPlayer{
 			estado_actual.ori_jugador.y = 0;
 		}else if(c_mas_h_derecha == minimo){
 			accion = Types.ACTIONS.ACTION_RIGHT;
-			segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_izquierda);
 				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y] = c_mas_h_derecha;
 			if(estado_actual.ori_jugador.x != 1) repite = true;
 			estado_actual.pos_jugador.x += 1;
