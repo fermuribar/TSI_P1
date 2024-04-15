@@ -59,7 +59,8 @@ public class Test {
 
 		// 2. This plays a game in a level by the controller.
 //		ArcadeMachine.runOneGame(game, level1, visuals, AgenteDijkstra, recordActionsFile, seed, 0);
-		ArcadeMachine.runOneGame(game, level1, visuals, AgenteAStar, recordActionsFile, seed, 0);
+//		ArcadeMachine.runOneGame(game, level1, visuals, AgenteAStar, recordActionsFile, seed, 0);
+		ArcadeMachine.runOneGame(game, level1, visuals, AgenteRTAStar, recordActionsFile, seed, 0);
 
 
 		// 3. This replays a game from an action file previously recorded

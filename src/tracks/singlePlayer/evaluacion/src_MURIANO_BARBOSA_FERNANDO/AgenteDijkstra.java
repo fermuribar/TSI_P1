@@ -176,7 +176,7 @@ public class AgenteDijkstra extends AbstractPlayer{
                 //System.out.printf("(%d,%d) (%d,%d)-> c: %d; h: %d = %d\n", (int) hijo_izq.pos_jugador.x, (int) hijo_izq.pos_jugador.y, (int) hijo_izq.ori_jugador.x, (int) hijo_izq.ori_jugador.y, hijo_izq.coste, hijo_izq.h, hijo_izq.coste + hijo_izq.h);
             }
 
-            //expande izq
+            //expande der
             Nodo hijo_der = new Nodo();
             hijo_der.padre = nodo_actual;
             hijo_der.accion_desde_padre = Types.ACTIONS.ACTION_RIGHT;
