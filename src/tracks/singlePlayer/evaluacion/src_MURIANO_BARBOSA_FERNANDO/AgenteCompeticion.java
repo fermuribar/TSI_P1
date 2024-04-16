@@ -81,16 +81,14 @@ public class AgenteCompeticion extends AbstractPlayer{
 	 */
 	@Override
 	public ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
-		if(!repite){
-			long tInicio = System.nanoTime();
-			RTAStar(stateObs);
-			long tFin = System.nanoTime();
-			tiempoTotalms += (tFin - tInicio)/1000000;
+		
+		long tInicio = System.nanoTime();
+		RTAStar_mod(stateObs);
+		long tFin = System.nanoTime();
+		tiempoTotalms += (tFin - tInicio)/1000000;
 			
-		}else{
-			repite = false;
-		}
-		//if(terminado) System.out.printf("(runtime %d; nodos_expand: %d)\n",tiempoTotalms, nodo_expandidos);
+		
+		if(terminado) System.out.printf("(runtime %d; nodos_expand: %d)\n",tiempoTotalms, nodo_expandidos);
         return accion;
     }
 
@@ -99,8 +97,9 @@ public class AgenteCompeticion extends AbstractPlayer{
 	ACTIONS accion;
 	long tiempoTotalms;
 
-	private void RTAStar(StateObservation stateObs){
+	private void RTAStar_mod(StateObservation stateObs){
 		//ArrayList<Observation>[][] observaciones = stateObs.getObservationGrid();
+		accion = Types.ACTIONS.ACTION_NIL;
 		int c_mas_h_arriba = 100000;
 		int c_mas_h_abajo = 100000;
 		int c_mas_h_izquierda = 100000;
@@ -114,41 +113,41 @@ public class AgenteCompeticion extends AbstractPlayer{
 		
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_UP)){
 			c_mas_h_arriba = mapa_h[(int) estado_actual.pos_jugador.x][(int) (estado_actual.pos_jugador.y - 1.0)][mapa_heuristico];
-			if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == -1){
+			//if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == -1){
 				c_mas_h_arriba += 1;
-			}else{
-				c_mas_h_arriba += 2;
-			}
+			//}else{
+			//	c_mas_h_arriba += 2;
+			//}
 		}
 
 		//Calculo coste y h de abajo
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_DOWN)){
 			c_mas_h_abajo = mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y + 1][mapa_heuristico];
-			if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == 1){
+			//if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == 1){
 				c_mas_h_abajo += 1;
-			}else{
-				c_mas_h_abajo += 2;
-			}
+			//}else{
+			//	c_mas_h_abajo += 2;
+			//}
 		}
 
 		//Calculo coste y h de izq
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_LEFT)){
 			c_mas_h_izquierda = mapa_h[(int) estado_actual.pos_jugador.x - 1][(int) estado_actual.pos_jugador.y][mapa_heuristico];
-			if(estado_actual.ori_jugador.x == -1 && estado_actual.ori_jugador.y == 0){
+			//if(estado_actual.ori_jugador.x == -1 && estado_actual.ori_jugador.y == 0){
 				c_mas_h_izquierda += 1;
-			}else{
-				c_mas_h_izquierda += 2;
-			}	
+			//}else{
+			//	c_mas_h_izquierda += 2;
+			//}	
 		}
 
 		//Calculo coste y h de der
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_RIGHT)){
 			c_mas_h_derecha = mapa_h[(int) estado_actual.pos_jugador.x + 1][(int) estado_actual.pos_jugador.y][mapa_heuristico];
-			if(estado_actual.ori_jugador.x == 1 && estado_actual.ori_jugador.y == 0){
+			//if(estado_actual.ori_jugador.x == 1 && estado_actual.ori_jugador.y == 0){
 				c_mas_h_derecha += 1;
-			}else{
-				c_mas_h_derecha += 2;
-			}	
+			//}else{
+			//	c_mas_h_derecha += 2;
+			//}	
 		}
 
 		//cual minimos
@@ -160,53 +159,72 @@ public class AgenteCompeticion extends AbstractPlayer{
 
 		if(c_mas_h_arriba == minimo){
 			accion = Types.ACTIONS.ACTION_UP;
-			segundo_minimo = Math.min(c_mas_h_abajo, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
-			if(segundo_minimo != 100000){
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+			if(estado_actual.ori_jugador.y == -1){
+				segundo_minimo = Math.min(c_mas_h_abajo, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
+				if(segundo_minimo != 100000){
+					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+				}else{
+					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_arriba;
+				}
+				estado_actual.pos_jugador.y -= 1;
 			}else{
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_arriba;
+				//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
+				estado_actual.ori_jugador.x = 0;
+				estado_actual.ori_jugador.y = -1;
 			}
-			if(estado_actual.ori_jugador.y != -1) repite = true;
-			estado_actual.pos_jugador.y -= 1;
-			estado_actual.ori_jugador.x = 0;
-			estado_actual.ori_jugador.y = -1;
+			
 		}else if(c_mas_h_abajo == minimo){
 			accion = Types.ACTIONS.ACTION_DOWN;
-			segundo_minimo = Math.min(c_mas_h_arriba, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
-			if(segundo_minimo != 100000){
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+			if(estado_actual.ori_jugador.y == 1){
+				segundo_minimo = Math.min(c_mas_h_arriba, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
+				if(segundo_minimo != 100000){
+					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+				}else{
+					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_abajo;
+				}
+				estado_actual.pos_jugador.y += 1;
 			}else{
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_abajo;
+				//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
+				estado_actual.ori_jugador.x = 0;
+				estado_actual.ori_jugador.y = 1;
 			}
-			if(estado_actual.ori_jugador.y != 1) repite = true;
-			estado_actual.pos_jugador.y += 1;
-			estado_actual.ori_jugador.x = 0;
-			estado_actual.ori_jugador.y = 1;
+
 		}else if(c_mas_h_izquierda == minimo){
 			accion = Types.ACTIONS.ACTION_LEFT;
+			if(estado_actual.ori_jugador.x == -1){
 			segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_derecha);
-			if(segundo_minimo != 100000){
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+				if(segundo_minimo != 100000){
+					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+				}else{
+					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_izquierda;
+				}
+				estado_actual.pos_jugador.x -= 1;
 			}else{
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_izquierda;
+				//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
+				estado_actual.ori_jugador.x = -1;
+				estado_actual.ori_jugador.y = 0;
 			}
-			if(estado_actual.ori_jugador.x != -1) repite = true;
-			estado_actual.pos_jugador.x -= 1;
-			estado_actual.ori_jugador.x = -1;
-			estado_actual.ori_jugador.y = 0;
+
 		}else if(c_mas_h_derecha == minimo){
 			accion = Types.ACTIONS.ACTION_RIGHT;
-			segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_izquierda);
-			if(segundo_minimo != 100000){
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+			if(estado_actual.ori_jugador.x == 1){
+				segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_izquierda);
+				if(segundo_minimo != 100000){
+					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+				}else{
+					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_derecha;
+				}
+				if(estado_actual.ori_jugador.x != 1) repite = true;
+				estado_actual.pos_jugador.x += 1;
 			}else{
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_derecha;
+				//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
+				estado_actual.ori_jugador.x = 1;
+				estado_actual.ori_jugador.y = 0;
 			}
-			if(estado_actual.ori_jugador.x != 1) repite = true;
-			estado_actual.pos_jugador.x += 1;
-			estado_actual.ori_jugador.x = 1;
-			estado_actual.ori_jugador.y = 0;
+
 		}
+
+
 		int gemas_act = 0;
 		if(!stateObs.getAvatarResources().isEmpty())
 			gemas_act = (stateObs.getAvatarResources().get(6) > 9)? 9 : stateObs.getAvatarResources().get(6);
