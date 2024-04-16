@@ -21,6 +21,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 	Nodo estado_actual;
 
     int nodo_expandidos;
+	int n_acciones;
 
     /**
 	 * initialize all variables for the agent
@@ -58,6 +59,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 		accion = Types.ACTIONS.ACTION_NIL;
 		tiempoTotalms = 0;
 		nodo_expandidos = 0;
+		n_acciones = 0;
 	}
 
 
@@ -78,7 +80,8 @@ public class AgenteRTAStar extends AbstractPlayer{
 		}else{
 			repite = false;
 		}
-		if(terminado) System.out.printf("(runtime %d; nodos_expand: %d)\n",tiempoTotalms, nodo_expandidos);
+		n_acciones ++;
+		if(terminado) System.out.printf("(runtime %d; nodos_expand: %d; l_camino: %d)\n",tiempoTotalms, nodo_expandidos, n_acciones);
         return accion;
     }
 
