@@ -20,6 +20,7 @@ public class AgenteCompeticion extends AbstractPlayer{
     int nodo_expandidos;
 
 	int gemas_obt;
+	int mapa_heuristico;
 
     /**
 	 * initialize all variables for the agent
@@ -40,20 +41,20 @@ public class AgenteCompeticion extends AbstractPlayer{
         portal.y = Math.floor(portal.y / fescala.y);
 
 		ArrayList<Observation>[] gemas = stateObs.getResourcesPositions(stateObs.getAvatarPosition());
-		mapa_h = new int[observaciones.length][observaciones[0].length][10];	//9 para almacenar las 8 gemas mas cercanas y el portal
+		mapa_h = new int[observaciones.length][observaciones[0].length][2];	//9 para almacenar las 8 gemas mas cercanas y el portal
 
         for(int x = 0; x < mapa_h.length; x++){
             for(int y = 0; y < mapa_h[0].length; y++){
 				mapa_h[x][y][0] = Math.abs(x - (int) Math.floor(gemas[0].get(0).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(0).position.y / fescala.y));
-				mapa_h[x][y][1] = Math.abs(x - (int) Math.floor(gemas[0].get(1).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(1).position.y / fescala.y));
+				/*mapa_h[x][y][1] = Math.abs(x - (int) Math.floor(gemas[0].get(1).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(1).position.y / fescala.y));
 				mapa_h[x][y][2] = Math.abs(x - (int) Math.floor(gemas[0].get(2).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(2).position.y / fescala.y));
 				mapa_h[x][y][3] = Math.abs(x - (int) Math.floor(gemas[0].get(3).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(3).position.y / fescala.y));
 				mapa_h[x][y][4] = Math.abs(x - (int) Math.floor(gemas[0].get(4).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(4).position.y / fescala.y));
 				mapa_h[x][y][5] = Math.abs(x - (int) Math.floor(gemas[0].get(5).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(5).position.y / fescala.y));
 				mapa_h[x][y][6] = Math.abs(x - (int) Math.floor(gemas[0].get(6).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(6).position.y / fescala.y));
 				mapa_h[x][y][7] = Math.abs(x - (int) Math.floor(gemas[0].get(7).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(7).position.y / fescala.y));
-				mapa_h[x][y][8] = Math.abs(x - (int) Math.floor(gemas[0].get(8).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(8).position.y / fescala.y));
-				mapa_h[x][y][9] = Math.abs(x - (int) portal.x) + Math.abs(y - (int) portal.y);
+				mapa_h[x][y][8] = Math.abs(x - (int) Math.floor(gemas[0].get(8).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(8).position.y / fescala.y));*/
+				mapa_h[x][y][1] = Math.abs(x - (int) portal.x) + Math.abs(y - (int) portal.y);
             }
         }
 		estado_actual = new Nodo();
@@ -68,6 +69,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 		tiempoTotalms = 0;
 		nodo_expandidos = 0;
 		gemas_obt = 0;
+		mapa_heuristico = 0;
 	}
 
 
@@ -111,7 +113,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 		//Calculo coste y h de arriba
 		
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_UP)){
-			c_mas_h_arriba = mapa_h[(int) estado_actual.pos_jugador.x][(int) (estado_actual.pos_jugador.y - 1.0)][gemas_obt];
+			c_mas_h_arriba = mapa_h[(int) estado_actual.pos_jugador.x][(int) (estado_actual.pos_jugador.y - 1.0)][mapa_heuristico];
 			if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == -1){
 				c_mas_h_arriba += 1;
 			}else{
@@ -121,7 +123,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 
 		//Calculo coste y h de abajo
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_DOWN)){
-			c_mas_h_abajo = mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y + 1][gemas_obt];
+			c_mas_h_abajo = mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y + 1][mapa_heuristico];
 			if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == 1){
 				c_mas_h_abajo += 1;
 			}else{
@@ -131,7 +133,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 
 		//Calculo coste y h de izq
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_LEFT)){
-			c_mas_h_izquierda = mapa_h[(int) estado_actual.pos_jugador.x - 1][(int) estado_actual.pos_jugador.y][gemas_obt];
+			c_mas_h_izquierda = mapa_h[(int) estado_actual.pos_jugador.x - 1][(int) estado_actual.pos_jugador.y][mapa_heuristico];
 			if(estado_actual.ori_jugador.x == -1 && estado_actual.ori_jugador.y == 0){
 				c_mas_h_izquierda += 1;
 			}else{
@@ -141,7 +143,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 
 		//Calculo coste y h de der
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_RIGHT)){
-			c_mas_h_derecha = mapa_h[(int) estado_actual.pos_jugador.x + 1][(int) estado_actual.pos_jugador.y][gemas_obt];
+			c_mas_h_derecha = mapa_h[(int) estado_actual.pos_jugador.x + 1][(int) estado_actual.pos_jugador.y][mapa_heuristico];
 			if(estado_actual.ori_jugador.x == 1 && estado_actual.ori_jugador.y == 0){
 				c_mas_h_derecha += 1;
 			}else{
@@ -160,9 +162,9 @@ public class AgenteCompeticion extends AbstractPlayer{
 			accion = Types.ACTIONS.ACTION_UP;
 			segundo_minimo = Math.min(c_mas_h_abajo, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
 			if(segundo_minimo != 100000){
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][gemas_obt] = segundo_minimo;
+				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
 			}else{
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][gemas_obt] = c_mas_h_arriba;
+				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_arriba;
 			}
 			if(estado_actual.ori_jugador.y != -1) repite = true;
 			estado_actual.pos_jugador.y -= 1;
@@ -172,9 +174,9 @@ public class AgenteCompeticion extends AbstractPlayer{
 			accion = Types.ACTIONS.ACTION_DOWN;
 			segundo_minimo = Math.min(c_mas_h_arriba, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
 			if(segundo_minimo != 100000){
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][gemas_obt] = segundo_minimo;
+				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
 			}else{
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][gemas_obt] = c_mas_h_abajo;
+				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_abajo;
 			}
 			if(estado_actual.ori_jugador.y != 1) repite = true;
 			estado_actual.pos_jugador.y += 1;
@@ -184,9 +186,9 @@ public class AgenteCompeticion extends AbstractPlayer{
 			accion = Types.ACTIONS.ACTION_LEFT;
 			segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_derecha);
 			if(segundo_minimo != 100000){
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][gemas_obt] = segundo_minimo;
+				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
 			}else{
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][gemas_obt] = c_mas_h_izquierda;
+				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_izquierda;
 			}
 			if(estado_actual.ori_jugador.x != -1) repite = true;
 			estado_actual.pos_jugador.x -= 1;
@@ -196,19 +198,30 @@ public class AgenteCompeticion extends AbstractPlayer{
 			accion = Types.ACTIONS.ACTION_RIGHT;
 			segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_izquierda);
 			if(segundo_minimo != 100000){
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][gemas_obt] = segundo_minimo;
+				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
 			}else{
-				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][gemas_obt] = c_mas_h_derecha;
+				mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_derecha;
 			}
 			if(estado_actual.ori_jugador.x != 1) repite = true;
 			estado_actual.pos_jugador.x += 1;
 			estado_actual.ori_jugador.x = 1;
 			estado_actual.ori_jugador.y = 0;
 		}
+		int gemas_act = 0;
 		if(!stateObs.getAvatarResources().isEmpty())
-			gemas_obt = (stateObs.getAvatarResources().get(6) > 9)? 9 : stateObs.getAvatarResources().get(6);
-		System.out.print(gemas_obt);
-		if(estado_actual.pos_jugador.equals(portal) && gemas_obt == 8) terminado = true;
+			gemas_act = (stateObs.getAvatarResources().get(6) > 9)? 9 : stateObs.getAvatarResources().get(6);
+		if(gemas_act != gemas_obt && gemas_act < 9){
+			ArrayList<Observation>[] gemas = stateObs.getResourcesPositions(stateObs.getAvatarPosition());
+			for(int x = 0; x < mapa_h.length; x++){
+				for(int y = 0; y < mapa_h[0].length; y++){
+					mapa_h[x][y][0] = Math.abs(x - (int) Math.floor(gemas[0].get(0).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(0).position.y / fescala.y));
+				}
+			}
+			gemas_obt = gemas_act;
+		}else if (gemas_act == 9){
+			mapa_heuristico = 1;
+		}
+		if(estado_actual.pos_jugador.equals(portal) && gemas_obt == 9) terminado = true;
 	}
 
 	private boolean act_posible(StateObservation stateObs, ACTIONS act){
@@ -218,11 +231,12 @@ public class AgenteCompeticion extends AbstractPlayer{
         Vector2d NPC = posiciones_npc[0].get(0).position;
         NPC.x = Math.floor(NPC.x / fescala.x);
         NPC.y = Math.floor(NPC.y / fescala.y);
+		Vector2d NPC2 = posiciones_npc[0].get(1).position;
+        NPC2.x = Math.floor(NPC2.x / fescala.x);
+        NPC2.y = Math.floor(NPC2.y / fescala.y);
 		
-		int x_max = observaciones.length;
-		int y_max = observaciones[0].length;
-		int x = (int) estado_actual .pos_jugador.x;
-		int y = (int) estado_actual .pos_jugador.y;
+		int x = (int) estado_actual.pos_jugador.x;
+		int y = (int) estado_actual.pos_jugador.y;
 		boolean posible = false;
 		switch (act) {
 			case ACTION_UP:
@@ -232,6 +246,9 @@ public class AgenteCompeticion extends AbstractPlayer{
 					&& (!(NPC.x == x && NPC.y == y-1) && !(NPC.x == x-1 && NPC.y == y-1) && !(NPC.x == x+1 && NPC.y == y-1) && !(NPC.x == x-2 && NPC.y == y-1) && !(NPC.x == x+2 && NPC.y == y-1))
 					&& (!(NPC.x == x && NPC.y == y-2) && !(NPC.x == x-1 && NPC.y == y-2) && !(NPC.x == x+1 && NPC.y == y-2))
 					&& (!(NPC.x == x && NPC.y == y-3))
+					&& (!(NPC2.x == x && NPC2.y == y-1) && !(NPC2.x == x-1 && NPC2.y == y-1) && !(NPC2.x == x+1 && NPC2.y == y-1) && !(NPC2.x == x-2 && NPC2.y == y-1) && !(NPC2.x == x+2 && NPC2.y == y-1))
+					&& (!(NPC2.x == x && NPC2.y == y-2) && !(NPC2.x == x-1 && NPC2.y == y-2) && !(NPC2.x == x+1 && NPC2.y == y-2))
+					&& (!(NPC2.x == x && NPC2.y == y-3))
 				)
 				posible = true;
 				System.out.println(posible);
@@ -243,6 +260,9 @@ public class AgenteCompeticion extends AbstractPlayer{
 					&& (!(NPC.x == x && NPC.y == y+1) && !(NPC.x == x-1 && NPC.y == y+1) && !(NPC.x == x+1 && NPC.y == y+1) && !(NPC.x == x-2 && NPC.y == y+1) && !(NPC.x == x+2 && NPC.y == y+1))
 					&& (!(NPC.x == x && NPC.y == y+2) && !(NPC.x == x-1 && NPC.y == y+2) && !(NPC.x == x+1 && NPC.y == y+2))
 					&& (!(NPC.x == x && NPC.y == y+3))
+					&& (!(NPC2.x == x && NPC2.y == y+1) && !(NPC2.x == x-1 && NPC2.y == y+1) && !(NPC2.x == x+1 && NPC2.y == y+1) && !(NPC2.x == x-2 && NPC2.y == y+1) && !(NPC2.x == x+2 && NPC2.y == y+1))
+					&& (!(NPC2.x == x && NPC2.y == y+2) && !(NPC2.x == x-1 && NPC2.y == y+2) && !(NPC2.x == x+1 && NPC2.y == y+2))
+					&& (!(NPC2.x == x && NPC2.y == y+3))
 				)
 				posible = true;
 				System.out.println(posible);
@@ -254,6 +274,9 @@ public class AgenteCompeticion extends AbstractPlayer{
 					&& (!(NPC.y == y && NPC.x == x-1) && !(NPC.y == y-1 && NPC.x == x-1) && !(NPC.y == y+1 && NPC.x == x-1) && !(NPC.y == y-2 && NPC.x == x-1) && !(NPC.y == y+2 && NPC.x == x-1))
 					&& (!(NPC.y == y && NPC.x == x-2) && !(NPC.y == y-1 && NPC.x == x-2) && !(NPC.y == y+1 && NPC.x == x-2))
 					&& (!(NPC.y == y && NPC.x == x-3))
+					&& (!(NPC2.y == y && NPC2.x == x-1) && !(NPC2.y == y-1 && NPC2.x == x-1) && !(NPC2.y == y+1 && NPC2.x == x-1) && !(NPC2.y == y-2 && NPC2.x == x-1) && !(NPC2.y == y+2 && NPC2.x == x-1))
+					&& (!(NPC2.y == y && NPC2.x == x-2) && !(NPC2.y == y-1 && NPC2.x == x-2) && !(NPC2.y == y+1 && NPC2.x == x-2))
+					&& (!(NPC2.y == y && NPC2.x == x-3))
 				)
 				posible = true;
 				System.out.println(posible);
@@ -265,6 +288,9 @@ public class AgenteCompeticion extends AbstractPlayer{
 					&& (!(NPC.y == y && NPC.x == x+1) && !(NPC.y == y-1 && NPC.x == x+1) && !(NPC.y == y+1 && NPC.x == x+1) && !(NPC.y == y-2 && NPC.x == x+1) && !(NPC.y == y+2 && NPC.x == x+1))
 					&& (!(NPC.y == y && NPC.x == x+2) && !(NPC.y == y-1 && NPC.x == x+2) && !(NPC.y == y+1 && NPC.x == x+2))
 					&& (!(NPC.y == y && NPC.x == x+3))
+					&& (!(NPC2.y == y && NPC2.x == x+1) && !(NPC2.y == y-1 && NPC2.x == x+1) && !(NPC2.y == y+1 && NPC2.x == x+1) && !(NPC2.y == y-2 && NPC2.x == x+1) && !(NPC2.y == y+2 && NPC2.x == x+1))
+					&& (!(NPC2.y == y && NPC2.x == x+2) && !(NPC2.y == y-1 && NPC2.x == x+2) && !(NPC2.y == y+1 && NPC2.x == x+2))
+					&& (!(NPC2.y == y && NPC2.x == x+3))
 				)
 				posible = true;
 				System.out.println(posible);
@@ -272,6 +298,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 			default:
 				break;
 		}
+		System.out.println(NPC + " " + NPC2 + " " + estado_actual.pos_jugador + "\n");
 
 		return posible;
 	}
