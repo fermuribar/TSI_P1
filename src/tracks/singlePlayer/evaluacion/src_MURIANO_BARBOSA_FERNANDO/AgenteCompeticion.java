@@ -253,12 +253,15 @@ public class AgenteCompeticion extends AbstractPlayer{
 				System.out.println("arriba");
 				if(
 					( observaciones[x][y - 1].isEmpty() || (observaciones[x][y - 1].get(0).category != 4) ) 
-					&& (!(NPC.x == x && NPC.y == y-1) && !(NPC.x == x-1 && NPC.y == y-1) && !(NPC.x == x+1 && NPC.y == y-1) && !(NPC.x == x-2 && NPC.y == y-1) && !(NPC.x == x+2 && NPC.y == y-1))
-					&& (!(NPC.x == x && NPC.y == y-2) && !(NPC.x == x-1 && NPC.y == y-2) && !(NPC.x == x+1 && NPC.y == y-2))
-					&& (!(NPC.x == x && NPC.y == y-3))
-					&& (!(NPC2.x == x && NPC2.y == y-1) && !(NPC2.x == x-1 && NPC2.y == y-1) && !(NPC2.x == x+1 && NPC2.y == y-1) && !(NPC2.x == x-2 && NPC2.y == y-1) && !(NPC2.x == x+2 && NPC2.y == y-1))
-					&& (!(NPC2.x == x && NPC2.y == y-2) && !(NPC2.x == x-1 && NPC2.y == y-2) && !(NPC2.x == x+1 && NPC2.y == y-2))
-					&& (!(NPC2.x == x && NPC2.y == y-3))
+					&& (!(NPC.x == x && NPC.y == y-1) && !(NPC.x == x-1 && NPC.y == y-1) && !(NPC.x == x+1 && NPC.y == y-1) && !(NPC.x == x-2 && NPC.y == y-1) && !(NPC.x == x+2 && NPC.y == y-1) && !(NPC.x == x-3 && NPC.y == y-1) && !(NPC.x == x+3 && NPC.y == y-1))
+					&& (!(NPC.x == x && NPC.y == y-2) && !(NPC.x == x-1 && NPC.y == y-2) && !(NPC.x == x+1 && NPC.y == y-2) && !(NPC.x == x-2 && NPC.y == y-2) && !(NPC.x == x+2 && NPC.y == y-2))
+					&& (!(NPC.x == x && NPC.y == y-3) && !(NPC.x == x-1 && NPC.y == y-3) && !(NPC.x == x+1 && NPC.y == y-3))
+					&& !(NPC.x == x && NPC.y == y-4)
+
+					&& (!(NPC2.x == x && NPC2.y == y-1) && !(NPC2.x == x-1 && NPC2.y == y-1) && !(NPC2.x == x+1 && NPC2.y == y-1) && !(NPC2.x == x-2 && NPC2.y == y-1) && !(NPC2.x == x+2 && NPC2.y == y-1) && !(NPC2.x == x-3 && NPC2.y == y-1) && !(NPC2.x == x+3 && NPC2.y == y-1))
+					&& (!(NPC2.x == x && NPC2.y == y-2) && !(NPC2.x == x-1 && NPC2.y == y-2) && !(NPC2.x == x+1 && NPC2.y == y-2) && !(NPC2.x == x-2 && NPC2.y == y-2) && !(NPC2.x == x+2 && NPC2.y == y-2))
+					&& (!(NPC2.x == x && NPC2.y == y-3) && !(NPC2.x == x-1 && NPC2.y == y-3) && !(NPC2.x == x+1 && NPC2.y == y-3))
+					&& !(NPC2.x == x && NPC2.y == y-4)
 				)
 				posible = true;
 				System.out.println(posible);
@@ -267,12 +270,15 @@ public class AgenteCompeticion extends AbstractPlayer{
 				System.out.println("abajo");
 				if(
 					( observaciones[x][y + 1].isEmpty() || (observaciones[x][y + 1].get(0).category != 4) ) 
-					&& (!(NPC.x == x && NPC.y == y+1) && !(NPC.x == x-1 && NPC.y == y+1) && !(NPC.x == x+1 && NPC.y == y+1) && !(NPC.x == x-2 && NPC.y == y+1) && !(NPC.x == x+2 && NPC.y == y+1))
-					&& (!(NPC.x == x && NPC.y == y+2) && !(NPC.x == x-1 && NPC.y == y+2) && !(NPC.x == x+1 && NPC.y == y+2))
-					&& (!(NPC.x == x && NPC.y == y+3))
-					&& (!(NPC2.x == x && NPC2.y == y+1) && !(NPC2.x == x-1 && NPC2.y == y+1) && !(NPC2.x == x+1 && NPC2.y == y+1) && !(NPC2.x == x-2 && NPC2.y == y+1) && !(NPC2.x == x+2 && NPC2.y == y+1))
-					&& (!(NPC2.x == x && NPC2.y == y+2) && !(NPC2.x == x-1 && NPC2.y == y+2) && !(NPC2.x == x+1 && NPC2.y == y+2))
-					&& (!(NPC2.x == x && NPC2.y == y+3))
+					&& (!(NPC.x == x && NPC.y == y+1) && !(NPC.x == x-1 && NPC.y == y+1) && !(NPC.x == x+1 && NPC.y == y+1) && !(NPC.x == x-2 && NPC.y == y+1) && !(NPC.x == x+2 && NPC.y == y+1) && !(NPC.x == x-3 && NPC.y == y+1) && !(NPC.x == x+3 && NPC.y == y+1))
+					&& (!(NPC.x == x && NPC.y == y+2) && !(NPC.x == x-1 && NPC.y == y+2) && !(NPC.x == x+1 && NPC.y == y+2) && !(NPC.x == x-2 && NPC.y == y+2) && !(NPC.x == x+2 && NPC.y == y+2))
+					&& (!(NPC.x == x && NPC.y == y+3) && !(NPC.x == x-1 && NPC.y == y+3) && !(NPC.x == x+1 && NPC.y == y+3))
+					&& !(NPC.x == x && NPC.y == y+4) 
+
+					&& (!(NPC2.x == x && NPC2.y == y+1) && !(NPC2.x == x-1 && NPC2.y == y+1) && !(NPC2.x == x+1 && NPC2.y == y+1) && !(NPC2.x == x-2 && NPC2.y == y+1) && !(NPC2.x == x+2 && NPC2.y == y+1) && !(NPC2.x == x-3 && NPC2.y == y+1) && !(NPC2.x == x+3 && NPC2.y == y+1))
+					&& (!(NPC2.x == x && NPC2.y == y+2) && !(NPC2.x == x-1 && NPC2.y == y+2) && !(NPC2.x == x+1 && NPC2.y == y+2) && !(NPC2.x == x-2 && NPC2.y == y+2) && !(NPC2.x == x+2 && NPC2.y == y+2))
+					&& (!(NPC2.x == x && NPC2.y == y+3) && !(NPC2.x == x-1 && NPC2.y == y+3) && !(NPC2.x == x+1 && NPC2.y == y+3))
+					&& !(NPC2.x == x && NPC2.y == y+4)
 				)
 				posible = true;
 				System.out.println(posible);
@@ -281,12 +287,15 @@ public class AgenteCompeticion extends AbstractPlayer{
 				System.out.println("L");
 				if(
 					( observaciones[x - 1][y].isEmpty() || (observaciones[x - 1][y].get(0).category != 4) )
-					&& (!(NPC.y == y && NPC.x == x-1) && !(NPC.y == y-1 && NPC.x == x-1) && !(NPC.y == y+1 && NPC.x == x-1) && !(NPC.y == y-2 && NPC.x == x-1) && !(NPC.y == y+2 && NPC.x == x-1))
-					&& (!(NPC.y == y && NPC.x == x-2) && !(NPC.y == y-1 && NPC.x == x-2) && !(NPC.y == y+1 && NPC.x == x-2))
-					&& (!(NPC.y == y && NPC.x == x-3))
-					&& (!(NPC2.y == y && NPC2.x == x-1) && !(NPC2.y == y-1 && NPC2.x == x-1) && !(NPC2.y == y+1 && NPC2.x == x-1) && !(NPC2.y == y-2 && NPC2.x == x-1) && !(NPC2.y == y+2 && NPC2.x == x-1))
-					&& (!(NPC2.y == y && NPC2.x == x-2) && !(NPC2.y == y-1 && NPC2.x == x-2) && !(NPC2.y == y+1 && NPC2.x == x-2))
-					&& (!(NPC2.y == y && NPC2.x == x-3))
+					&& (!(NPC.y == y && NPC.x == x-1) && !(NPC.y == y-1 && NPC.x == x-1) && !(NPC.y == y+1 && NPC.x == x-1) && !(NPC.y == y-2 && NPC.x == x-1) && !(NPC.y == y+2 && NPC.x == x-1) && !(NPC.y == y-3 && NPC.x == x-1) && !(NPC.y == y+3 && NPC.x == x-1))
+					&& (!(NPC.y == y && NPC.x == x-2) && !(NPC.y == y-1 && NPC.x == x-2) && !(NPC.y == y+1 && NPC.x == x-2) && !(NPC.y == y-2 && NPC.x == x-2) && !(NPC.y == y+2 && NPC.x == x-2))
+					&& (!(NPC.y == y && NPC.x == x-3) && !(NPC.y == y-1 && NPC.x == x-3) && !(NPC.y == y+1 && NPC.x == x-3))
+					&& !(NPC.y == y && NPC.x == x-4)
+
+					&& (!(NPC2.y == y && NPC2.x == x-1) && !(NPC2.y == y-1 && NPC2.x == x-1) && !(NPC2.y == y+1 && NPC2.x == x-1) && !(NPC2.y == y-2 && NPC2.x == x-1) && !(NPC2.y == y+2 && NPC2.x == x-1) && !(NPC2.y == y-3 && NPC2.x == x-1) && !(NPC2.y == y+3 && NPC2.x == x-1))
+					&& (!(NPC2.y == y && NPC2.x == x-2) && !(NPC2.y == y-1 && NPC2.x == x-2) && !(NPC2.y == y+1 && NPC2.x == x-2) && !(NPC2.y == y-2 && NPC2.x == x-2) && !(NPC2.y == y+2 && NPC2.x == x-2))
+					&& (!(NPC2.y == y && NPC2.x == x-3) && !(NPC2.y == y-1 && NPC2.x == x-3) && !(NPC2.y == y+1 && NPC2.x == x-3))
+					&& !(NPC2.y == y && NPC2.x == x-4)
 				)
 				posible = true;
 				System.out.println(posible);
@@ -295,12 +304,15 @@ public class AgenteCompeticion extends AbstractPlayer{
 				System.out.println("R");
 				if(
 					( observaciones[x + 1][y].isEmpty() || (observaciones[x + 1][y].get(0).category != 4) )
-					&& (!(NPC.y == y && NPC.x == x+1) && !(NPC.y == y-1 && NPC.x == x+1) && !(NPC.y == y+1 && NPC.x == x+1) && !(NPC.y == y-2 && NPC.x == x+1) && !(NPC.y == y+2 && NPC.x == x+1))
-					&& (!(NPC.y == y && NPC.x == x+2) && !(NPC.y == y-1 && NPC.x == x+2) && !(NPC.y == y+1 && NPC.x == x+2))
-					&& (!(NPC.y == y && NPC.x == x+3))
-					&& (!(NPC2.y == y && NPC2.x == x+1) && !(NPC2.y == y-1 && NPC2.x == x+1) && !(NPC2.y == y+1 && NPC2.x == x+1) && !(NPC2.y == y-2 && NPC2.x == x+1) && !(NPC2.y == y+2 && NPC2.x == x+1))
-					&& (!(NPC2.y == y && NPC2.x == x+2) && !(NPC2.y == y-1 && NPC2.x == x+2) && !(NPC2.y == y+1 && NPC2.x == x+2))
-					&& (!(NPC2.y == y && NPC2.x == x+3))
+					&& (!(NPC.y == y && NPC.x == x+1) && !(NPC.y == y-1 && NPC.x == x+1) && !(NPC.y == y+1 && NPC.x == x+1) && !(NPC.y == y-2 && NPC.x == x+1) && !(NPC.y == y+2 && NPC.x == x+1) && !(NPC.y == y-3 && NPC.x == x+1) && !(NPC.y == y+3 && NPC.x == x+1))
+					&& (!(NPC.y == y && NPC.x == x+2) && !(NPC.y == y-1 && NPC.x == x+2) && !(NPC.y == y+1 && NPC.x == x+2) && !(NPC.y == y-2 && NPC.x == x+2) && !(NPC.y == y+2 && NPC.x == x+2))
+					&& (!(NPC.y == y && NPC.x == x+3) && !(NPC.y == y-1 && NPC.x == x+3) && !(NPC.y == y+1 && NPC.x == x+3))
+					&& !(NPC.y == y && NPC.x == x+4)
+
+					&& (!(NPC2.y == y && NPC2.x == x+1) && !(NPC2.y == y-1 && NPC2.x == x+1) && !(NPC2.y == y+1 && NPC2.x == x+1) && !(NPC2.y == y-2 && NPC2.x == x+1) && !(NPC2.y == y+2 && NPC2.x == x+1) && !(NPC2.y == y-3 && NPC2.x == x+1) && !(NPC2.y == y+3 && NPC2.x == x+1))
+					&& (!(NPC2.y == y && NPC2.x == x+2) && !(NPC2.y == y-1 && NPC2.x == x+2) && !(NPC2.y == y+1 && NPC2.x == x+2) && !(NPC2.y == y-2 && NPC2.x == x+2) && !(NPC2.y == y+2 && NPC2.x == x+2))
+					&& (!(NPC2.y == y && NPC2.x == x+3) && !(NPC2.y == y-1 && NPC2.x == x+3) && !(NPC2.y == y+1 && NPC2.x == x+3))
+					&& !(NPC2.y == y && NPC2.x == x+4)
 				)
 				posible = true;
 				System.out.println(posible);
