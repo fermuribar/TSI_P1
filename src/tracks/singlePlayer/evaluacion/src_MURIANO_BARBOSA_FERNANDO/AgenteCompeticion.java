@@ -226,7 +226,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 				if(
 					( observaciones[x][y - 1].isEmpty() || (observaciones[x][y - 1].get(0).category != 4 /*&& observaciones[x][y - 1].get(0).category != 3*/) ) //1 alante
 					&& (!(NPC.x == x-1 && NPC.y == y-1) && !(NPC.x == x+1 && NPC.y == y-1) && !(NPC.x == x && NPC.y == y-1) && !(NPC.x == x && NPC.y == y-2))
-					&& (!(NPC.x == x-1 && NPC.y == y) && !(NPC.x == x+1 && NPC.y == y))
+					//&& (!(NPC.x == x-1 && NPC.y == y) && !(NPC.x == x+1 && NPC.y == y))
 					//&& 			
 					//(Math.abs(NPC.x - x) > 2 && y - NPC.y < 0 && y - NPC.y > 3)
 					//&&																																			
@@ -258,7 +258,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 				if(
 					( observaciones[x][y + 1].isEmpty() || (observaciones[x][y + 1].get(0).category != 4 /*&& observaciones[x][y + 1].get(0).category != 3*/) ) //1 alante
 					&& (!(NPC.x == x-1 && NPC.y == y+1) && !(NPC.x == x+1 && NPC.y == y+1) && !(NPC.x == x && NPC.y == y+1) && !(NPC.x == x && NPC.y == y+2))
-					&& (!(NPC.x == x-1 && NPC.y == y) && !(NPC.x == x+1 && NPC.y == y))
+					//&& (!(NPC.x == x-1 && NPC.y == y) && !(NPC.x == x+1 && NPC.y == y))
 					//&& 			
 					//(Math.abs(NPC.x - x) > 2 && NPC.y - y < 0 && NPC.y - y > 3)
 					//&& 																																					
@@ -290,7 +290,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 				if(
 					( observaciones[x - 1][y].isEmpty() || (observaciones[x - 1][y].get(0).category != 4 /*&& observaciones[x - 1][y].get(0).category != 3*/) ) //1 alante
 					&& (!(NPC.y == y-1 && NPC.x == x-1) && !(NPC.y == y+1 && NPC.x == x-1) && !(NPC.y == y && NPC.x == x-1) && !(NPC.y == y && NPC.x == x-2))
-					&& (!(NPC.y == y-1 && NPC.x == x) && !(NPC.y == y+1 && NPC.x == x))
+					//&& (!(NPC.y == y-1 && NPC.x == x) && !(NPC.y == y+1 && NPC.x == x))
 					//&& 			
 					//(Math.abs(NPC.y - y) > 2 && y - NPC.x < 0 && x - NPC.x > 3)
 					//&& 																																					
@@ -322,7 +322,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 				if(
 					( observaciones[x + 1][y].isEmpty() || (observaciones[x + 1][y].get(0).category != 4 /*&& observaciones[x + 1][y].get(0).category != 3*/) ) //1 alante
 					&& (!(NPC.y == y-1 && NPC.x == x+1) && !(NPC.y == y+1 && NPC.x == x+1) && !(NPC.y == y && NPC.x == x+1) && !(NPC.y == y && NPC.x == x+2))
-					&& (!(NPC.y == y-1 && NPC.x == x) && !(NPC.y == y+1 && NPC.x == x))
+					//&& (!(NPC.y == y-1 && NPC.x == x) && !(NPC.y == y+1 && NPC.x == x))
 					//&& 			
 					//(Math.abs(NPC.y - y) > 2 && NPC.x - x < 0 && NPC.x - x > 3)
 					//&& 																																					
