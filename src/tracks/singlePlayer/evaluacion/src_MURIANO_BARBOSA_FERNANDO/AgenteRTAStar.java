@@ -106,7 +106,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 		if(observaciones[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y - 1].isEmpty() || 
 			observaciones[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y - 1].get(0).category != 4)
 			{
-			c_mas_h_arriba = mapa_h[(int) estado_actual.pos_jugador.x][(int) (estado_actual.pos_jugador.y - 1.0)];
+			c_mas_h_arriba = mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y];
 			if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == -1){
 				c_mas_h_arriba += 1;
 			}else{

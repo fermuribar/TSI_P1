@@ -46,14 +46,6 @@ public class AgenteCompeticion extends AbstractPlayer{
         for(int x = 0; x < mapa_h.length; x++){
             for(int y = 0; y < mapa_h[0].length; y++){
 				mapa_h[x][y][0] = Math.abs(x - (int) Math.floor(gemas[0].get(0).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(0).position.y / fescala.y));
-				/*mapa_h[x][y][1] = Math.abs(x - (int) Math.floor(gemas[0].get(1).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(1).position.y / fescala.y));
-				mapa_h[x][y][2] = Math.abs(x - (int) Math.floor(gemas[0].get(2).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(2).position.y / fescala.y));
-				mapa_h[x][y][3] = Math.abs(x - (int) Math.floor(gemas[0].get(3).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(3).position.y / fescala.y));
-				mapa_h[x][y][4] = Math.abs(x - (int) Math.floor(gemas[0].get(4).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(4).position.y / fescala.y));
-				mapa_h[x][y][5] = Math.abs(x - (int) Math.floor(gemas[0].get(5).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(5).position.y / fescala.y));
-				mapa_h[x][y][6] = Math.abs(x - (int) Math.floor(gemas[0].get(6).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(6).position.y / fescala.y));
-				mapa_h[x][y][7] = Math.abs(x - (int) Math.floor(gemas[0].get(7).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(7).position.y / fescala.y));
-				mapa_h[x][y][8] = Math.abs(x - (int) Math.floor(gemas[0].get(8).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(8).position.y / fescala.y));*/
 				mapa_h[x][y][1] = Math.abs(x - (int) portal.x) + Math.abs(y - (int) portal.y);
             }
         }
@@ -106,122 +98,122 @@ public class AgenteCompeticion extends AbstractPlayer{
 		int c_mas_h_derecha = 100000;
 
 		repite = false;
-
 		nodo_expandidos++;
 
 		//Calculo coste y h de arriba
-		
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_UP)){
-			c_mas_h_arriba = mapa_h[(int) estado_actual.pos_jugador.x][(int) (estado_actual.pos_jugador.y - 1.0)][mapa_heuristico];
-			//if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == -1){
-				c_mas_h_arriba += 1;
-			//}else{
-			//	c_mas_h_arriba += 2;
-			//}
+			c_mas_h_arriba = mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y - 1][mapa_heuristico];
+			c_mas_h_arriba += 1;
 		}
 
 		//Calculo coste y h de abajo
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_DOWN)){
 			c_mas_h_abajo = mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y + 1][mapa_heuristico];
-			//if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == 1){
-				c_mas_h_abajo += 1;
-			//}else{
-			//	c_mas_h_abajo += 2;
-			//}
+			c_mas_h_abajo += 1;
 		}
 
 		//Calculo coste y h de izq
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_LEFT)){
 			c_mas_h_izquierda = mapa_h[(int) estado_actual.pos_jugador.x - 1][(int) estado_actual.pos_jugador.y][mapa_heuristico];
-			//if(estado_actual.ori_jugador.x == -1 && estado_actual.ori_jugador.y == 0){
-				c_mas_h_izquierda += 1;
-			//}else{
-			//	c_mas_h_izquierda += 2;
-			//}	
+			c_mas_h_izquierda += 1;
 		}
 
 		//Calculo coste y h de der
 		if(act_posible(stateObs,Types.ACTIONS.ACTION_RIGHT)){
 			c_mas_h_derecha = mapa_h[(int) estado_actual.pos_jugador.x + 1][(int) estado_actual.pos_jugador.y][mapa_heuristico];
-			//if(estado_actual.ori_jugador.x == 1 && estado_actual.ori_jugador.y == 0){
-				c_mas_h_derecha += 1;
-			//}else{
-			//	c_mas_h_derecha += 2;
-			//}	
+			c_mas_h_derecha += 1;
 		}
 
 		//cual minimos
-
 		int minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), Math.min(c_mas_h_izquierda, c_mas_h_derecha));
 		int segundo_minimo = 0;
 		System.out.printf("(%d,%d) - ari: %d; aba: %d; izq: %d; der: %d; ->min %d\n", (int) estado_actual.pos_jugador.x, (int) estado_actual.pos_jugador.y, c_mas_h_arriba, c_mas_h_abajo, c_mas_h_izquierda, c_mas_h_derecha, minimo);
 		
-
-		if(c_mas_h_arriba == minimo){
-			accion = Types.ACTIONS.ACTION_UP;
-			if(estado_actual.ori_jugador.y == -1){
-				segundo_minimo = Math.min(c_mas_h_abajo, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
-				if(segundo_minimo != 100000){
-					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
-				}else{
-					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_arriba;
-				}
-				estado_actual.pos_jugador.y -= 1;
-			}else{
-				//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
-				estado_actual.ori_jugador.x = 0;
-				estado_actual.ori_jugador.y = -1;
+		if(minimo != 100000){
+			boolean p_arriba = true;
+			boolean p_izq = true;
+			boolean p_abajo = true;
+			boolean p_der = true;
+			if(c_mas_h_arriba == minimo && estado_actual.ori_jugador.y == -1){
+				p_izq = p_abajo = p_der = false;
 			}
-			
-		}else if(c_mas_h_abajo == minimo){
-			accion = Types.ACTIONS.ACTION_DOWN;
-			if(estado_actual.ori_jugador.y == 1){
-				segundo_minimo = Math.min(c_mas_h_arriba, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
-				if(segundo_minimo != 100000){
-					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
-				}else{
-					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_abajo;
-				}
-				estado_actual.pos_jugador.y += 1;
-			}else{
-				//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
-				estado_actual.ori_jugador.x = 0;
-				estado_actual.ori_jugador.y = 1;
+			if(c_mas_h_izquierda == minimo && estado_actual.ori_jugador.x == -1){
+				p_arriba = p_abajo = p_der = false;
+			}
+			if(c_mas_h_abajo == minimo && estado_actual.ori_jugador.y == 1){
+				p_arriba = p_izq = p_der = false;
+			}
+			if(c_mas_h_derecha == minimo&& estado_actual.ori_jugador.x == 1){
+				p_arriba = p_izq = p_abajo = false;
 			}
 
-		}else if(c_mas_h_izquierda == minimo){
-			accion = Types.ACTIONS.ACTION_LEFT;
-			if(estado_actual.ori_jugador.x == -1){
-			segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_derecha);
-				if(segundo_minimo != 100000){
-					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
-				}else{
-					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_izquierda;
-				}
-				estado_actual.pos_jugador.x -= 1;
-			}else{
-				//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
-				estado_actual.ori_jugador.x = -1;
-				estado_actual.ori_jugador.y = 0;
-			}
 
-		}else if(c_mas_h_derecha == minimo){
-			accion = Types.ACTIONS.ACTION_RIGHT;
-			if(estado_actual.ori_jugador.x == 1){
-				segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_izquierda);
-				if(segundo_minimo != 100000){
-					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+			if(c_mas_h_arriba == minimo && p_arriba){
+				accion = Types.ACTIONS.ACTION_UP;
+				if(estado_actual.ori_jugador.y == -1){
+					segundo_minimo = Math.min(c_mas_h_abajo, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
+					if(segundo_minimo != 100000){
+						mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+					}else{
+						mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_arriba;
+					}
+					estado_actual.pos_jugador.y -= 1;
 				}else{
-					mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_derecha;
+					System.out.print(" Giro ");
+					//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
+					estado_actual.ori_jugador.x = 0;
+					estado_actual.ori_jugador.y = -1;
+				}	
+			}else if(c_mas_h_izquierda == minimo && p_izq){
+				accion = Types.ACTIONS.ACTION_LEFT;
+				if(estado_actual.ori_jugador.x == -1){
+				segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_derecha);
+					if(segundo_minimo != 100000){
+						mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+					}else{
+						mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_izquierda;
+					}
+					estado_actual.pos_jugador.x -= 1;
+				}else{
+					System.out.print(" Giro ");
+					//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
+					estado_actual.ori_jugador.x = -1;
+					estado_actual.ori_jugador.y = 0;
 				}
-				if(estado_actual.ori_jugador.x != 1) repite = true;
-				estado_actual.pos_jugador.x += 1;
-			}else{
-				//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
-				estado_actual.ori_jugador.x = 1;
-				estado_actual.ori_jugador.y = 0;
+			}else if(c_mas_h_abajo == minimo && p_abajo){
+				accion = Types.ACTIONS.ACTION_DOWN;
+				if(estado_actual.ori_jugador.y == 1){
+					segundo_minimo = Math.min(c_mas_h_arriba, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
+					if(segundo_minimo != 100000){
+						mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+					}else{
+						mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_abajo;
+					}
+					estado_actual.pos_jugador.y += 1;
+				}else{
+					System.out.print(" Giro ");
+					//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
+					estado_actual.ori_jugador.x = 0;
+					estado_actual.ori_jugador.y = 1;
+				}
+			}else if(c_mas_h_derecha == minimo && p_der){
+				accion = Types.ACTIONS.ACTION_RIGHT;
+				if(estado_actual.ori_jugador.x == 1){
+					segundo_minimo = Math.min(Math.min(c_mas_h_arriba, c_mas_h_abajo), c_mas_h_izquierda);
+					if(segundo_minimo != 100000){
+						mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = segundo_minimo;
+					}else{
+						mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] = c_mas_h_derecha;
+					}
+					if(estado_actual.ori_jugador.x != 1) repite = true;
+					estado_actual.pos_jugador.x += 1;
+				}else{
+					System.out.print(" Giro ");
+					//mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y][mapa_heuristico] += 2;
+					estado_actual.ori_jugador.x = 1;
+					estado_actual.ori_jugador.y = 0;
+				}
 			}
-
 		}
 
 
@@ -288,7 +280,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 			case ACTION_LEFT:
 				System.out.println("L");
 				if(
-					( observaciones[x - 1][y].isEmpty() || (observaciones[x - 1][y].get(0).category != 4) ) 
+					( observaciones[x - 1][y].isEmpty() || (observaciones[x - 1][y].get(0).category != 4) )
 					&& (!(NPC.y == y && NPC.x == x-1) && !(NPC.y == y-1 && NPC.x == x-1) && !(NPC.y == y+1 && NPC.x == x-1) && !(NPC.y == y-2 && NPC.x == x-1) && !(NPC.y == y+2 && NPC.x == x-1))
 					&& (!(NPC.y == y && NPC.x == x-2) && !(NPC.y == y-1 && NPC.x == x-2) && !(NPC.y == y+1 && NPC.x == x-2))
 					&& (!(NPC.y == y && NPC.x == x-3))
