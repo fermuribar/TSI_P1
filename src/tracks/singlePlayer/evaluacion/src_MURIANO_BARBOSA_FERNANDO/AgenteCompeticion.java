@@ -40,7 +40,7 @@ public class AgenteCompeticion extends AbstractPlayer{
         portal.y = Math.floor(portal.y / fescala.y);
 
 		ArrayList<Observation>[] gemas = stateObs.getResourcesPositions(stateObs.getAvatarPosition());
-		mapa_h = new int[observaciones.length][observaciones[0].length][9];	//9 para almacenar las 8 gemas mas cercanas y el portal
+		mapa_h = new int[observaciones.length][observaciones[0].length][10];	//9 para almacenar las 8 gemas mas cercanas y el portal
 
         for(int x = 0; x < mapa_h.length; x++){
             for(int y = 0; y < mapa_h[0].length; y++){
@@ -52,7 +52,8 @@ public class AgenteCompeticion extends AbstractPlayer{
 				mapa_h[x][y][5] = Math.abs(x - (int) Math.floor(gemas[0].get(5).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(5).position.y / fescala.y));
 				mapa_h[x][y][6] = Math.abs(x - (int) Math.floor(gemas[0].get(6).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(6).position.y / fescala.y));
 				mapa_h[x][y][7] = Math.abs(x - (int) Math.floor(gemas[0].get(7).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(7).position.y / fescala.y));
-				mapa_h[x][y][8] = Math.abs(x - (int) portal.x) + Math.abs(y - (int) portal.y);
+				mapa_h[x][y][8] = Math.abs(x - (int) Math.floor(gemas[0].get(8).position.x / fescala.x)) + Math.abs(y - (int) Math.floor(gemas[0].get(8).position.y / fescala.y));
+				mapa_h[x][y][9] = Math.abs(x - (int) portal.x) + Math.abs(y - (int) portal.y);
             }
         }
 		estado_actual = new Nodo();
@@ -204,7 +205,10 @@ public class AgenteCompeticion extends AbstractPlayer{
 			estado_actual.ori_jugador.x = 1;
 			estado_actual.ori_jugador.y = 0;
 		}
-		if(estado_actual.pos_jugador.equals(portal)) terminado = true;
+		if(!stateObs.getAvatarResources().isEmpty())
+			gemas_obt = (stateObs.getAvatarResources().get(6) > 9)? 9 : stateObs.getAvatarResources().get(6);
+		System.out.print(gemas_obt);
+		if(estado_actual.pos_jugador.equals(portal) && gemas_obt == 8) terminado = true;
 	}
 
 	private boolean act_posible(StateObservation stateObs, ACTIONS act){
@@ -224,31 +228,10 @@ public class AgenteCompeticion extends AbstractPlayer{
 			case ACTION_UP:
 				System.out.println("arriba");
 				if(
-					( observaciones[x][y - 1].isEmpty() || (observaciones[x][y - 1].get(0).category != 4 /*&& observaciones[x][y - 1].get(0).category != 3*/) ) //1 alante
-					&& (!(NPC.x == x-1 && NPC.y == y-1) && !(NPC.x == x+1 && NPC.y == y-1) && !(NPC.x == x && NPC.y == y-1) && !(NPC.x == x && NPC.y == y-2))
-					//&& (!(NPC.x == x-1 && NPC.y == y) && !(NPC.x == x+1 && NPC.y == y))
-					//&& 			
-					//(Math.abs(NPC.x - x) > 2 && y - NPC.y < 0 && y - NPC.y > 3)
-					//&&																																			
-					//(y-2 < 0 && (observaciones[x][y - 2].isEmpty() || observaciones[x][y - 2].get(0).category != 3))												//2 alante
-					//&& 																																						
-					//(y-3 < 0 && (observaciones[x][y - 3].isEmpty() || observaciones[x][y - 3].get(0).category != 3))												//3 alante
-					//&& 
-					//(observaciones[x - 1][y - 1].isEmpty() || observaciones[x - 1][y - 1].get(0).category != 3)													//diagonal 1
-					//&& 
-					//(observaciones[x + 1][y - 1].isEmpty() || observaciones[x + 1][y - 1].get(0).category != 3)													//diagonal 2
-					/*&& 
-					(y-2 < 0 && (observaciones[x - 1][y - 2].isEmpty() || observaciones[x - 1][y - 2].get(0).category != 3))										//diagonal2 1
-					&& 
-					(y-2 < 0 && (observaciones[x + 1][y - 2].isEmpty() || observaciones[x + 1][y - 2].get(0).category != 3))										//diagonal2 2
-					&& 
-					(x-2 < 0 && (observaciones[x - 2][y - 1].isEmpty() || observaciones[x - 2][y - 1].get(0).category != 3))										//diagonal+ 1
-					&& 
-					(x+2 >= x_max && (observaciones[x + 2][y - 1].isEmpty() || observaciones[x + 2][y - 1].get(0).category != 3))									//diagonal+ 2
-					&& 
-					(observaciones[x - 1][y].isEmpty() || observaciones[x - 1][y].get(0).category != 3)															//lado 1
-					&& 
-					(observaciones[x + 1][y].isEmpty() || observaciones[x + 1][y].get(0).category != 3)															//lado 2*/
+					( observaciones[x][y - 1].isEmpty() || (observaciones[x][y - 1].get(0).category != 4) ) 
+					&& (!(NPC.x == x && NPC.y == y-1) && !(NPC.x == x-1 && NPC.y == y-1) && !(NPC.x == x+1 && NPC.y == y-1) && !(NPC.x == x-2 && NPC.y == y-1) && !(NPC.x == x+2 && NPC.y == y-1))
+					&& (!(NPC.x == x && NPC.y == y-2) && !(NPC.x == x-1 && NPC.y == y-2) && !(NPC.x == x+1 && NPC.y == y-2))
+					&& (!(NPC.x == x && NPC.y == y-3))
 				)
 				posible = true;
 				System.out.println(posible);
@@ -256,31 +239,10 @@ public class AgenteCompeticion extends AbstractPlayer{
 			case ACTION_DOWN:
 				System.out.println("abajo");
 				if(
-					( observaciones[x][y + 1].isEmpty() || (observaciones[x][y + 1].get(0).category != 4 /*&& observaciones[x][y + 1].get(0).category != 3*/) ) //1 alante
-					&& (!(NPC.x == x-1 && NPC.y == y+1) && !(NPC.x == x+1 && NPC.y == y+1) && !(NPC.x == x && NPC.y == y+1) && !(NPC.x == x && NPC.y == y+2))
-					//&& (!(NPC.x == x-1 && NPC.y == y) && !(NPC.x == x+1 && NPC.y == y))
-					//&& 			
-					//(Math.abs(NPC.x - x) > 2 && NPC.y - y < 0 && NPC.y - y > 3)
-					//&& 																																					
-					//(y+2 >= y_max && (observaciones[x][y + 2].isEmpty() || observaciones[x][y + 2].get(0).category != 3))												//2 alante
-					//&& 																																						
-					//(y+3 >= y_max && (observaciones[x][y + 3].isEmpty() || observaciones[x][y + 3].get(0).category != 3))												//3 alante
-					//&& 
-					//(observaciones[x - 1][y + 1].isEmpty() || observaciones[x - 1][y + 1].get(0).category != 3)													//diagonal 1
-					//&& 
-					//(observaciones[x + 1][y + 1].isEmpty() || observaciones[x + 1][y + 1].get(0).category != 3)													//diagonal 2
-					//&& 
-					//(y+2 >= y_max && (observaciones[x - 1][y + 2].isEmpty() || observaciones[x - 1][y + 2].get(0).category != 3))										//diagonal2 1
-					//&& 
-					//(y+2 >= y_max && (observaciones[x + 1][y + 2].isEmpty() || observaciones[x + 1][y + 2].get(0).category != 3))										//diagonal2 2
-					//&& 
-					//(x-2 < 0 && (observaciones[x - 2][y + 1].isEmpty() || observaciones[x - 2][y + 1].get(0).category != 3))										//diagonal+ 1
-					//&& 
-					//(x+2 >= x_max && (observaciones[x + 2][y + 1].isEmpty() || observaciones[x + 2][y + 1].get(0).category != 3))									//diagonal+ 2
-					//&& 
-					//(observaciones[x - 1][y].isEmpty() || observaciones[x - 1][y].get(0).category != 3)															//lado 1
-					//&& 
-					//(observaciones[x + 1][y].isEmpty() || observaciones[x + 1][y].get(0).category != 3)															//lado 2*/
+					( observaciones[x][y + 1].isEmpty() || (observaciones[x][y + 1].get(0).category != 4) ) 
+					&& (!(NPC.x == x && NPC.y == y+1) && !(NPC.x == x-1 && NPC.y == y+1) && !(NPC.x == x+1 && NPC.y == y+1) && !(NPC.x == x-2 && NPC.y == y+1) && !(NPC.x == x+2 && NPC.y == y+1))
+					&& (!(NPC.x == x && NPC.y == y+2) && !(NPC.x == x-1 && NPC.y == y+2) && !(NPC.x == x+1 && NPC.y == y+2))
+					&& (!(NPC.x == x && NPC.y == y+3))
 				)
 				posible = true;
 				System.out.println(posible);
@@ -288,31 +250,10 @@ public class AgenteCompeticion extends AbstractPlayer{
 			case ACTION_LEFT:
 				System.out.println("L");
 				if(
-					( observaciones[x - 1][y].isEmpty() || (observaciones[x - 1][y].get(0).category != 4 /*&& observaciones[x - 1][y].get(0).category != 3*/) ) //1 alante
-					&& (!(NPC.y == y-1 && NPC.x == x-1) && !(NPC.y == y+1 && NPC.x == x-1) && !(NPC.y == y && NPC.x == x-1) && !(NPC.y == y && NPC.x == x-2))
-					//&& (!(NPC.y == y-1 && NPC.x == x) && !(NPC.y == y+1 && NPC.x == x))
-					//&& 			
-					//(Math.abs(NPC.y - y) > 2 && y - NPC.x < 0 && x - NPC.x > 3)
-					//&& 																																					
-					//(x-2 < 0 && (observaciones[x - 2][y].isEmpty() || observaciones[x - 2][y].get(0).category != 3))												//2 alante
-					//&& 																																						
-					//(x-3 < 0 && (observaciones[x - 3][y].isEmpty() || observaciones[x - 3][y].get(0).category != 3))												//3 alante
-					//&& 
-					//(observaciones[x - 1][y - 1].isEmpty() || observaciones[x - 1][y - 1].get(0).category != 3)													//diagonal 1
-					//&& 
-					//(observaciones[x - 1][y + 1].isEmpty() || observaciones[x - 1][y + 1].get(0).category != 3)													//diagonal 2
-					/*&& 
-					(x-2 < 0 && (observaciones[x - 2][y - 1].isEmpty() || observaciones[x - 2][y - 1].get(0).category != 3))										//diagonal2 1
-					&& 
-					(x-2 < 0 && (observaciones[x - 2][y + 1].isEmpty() || observaciones[x - 2][y + 1].get(0).category != 3))										//diagonal2 2
-					&& 
-					(y-2 < 0 && (observaciones[x - 1][y - 2].isEmpty() || observaciones[x - 1][y - 2].get(0).category != 3))										//diagonal+ 1
-					&& 
-					(y+2 >= y_max && (observaciones[x - 1][y + 2].isEmpty() || observaciones[x - 1][y + 2].get(0).category != 3))									//diagonal+ 2
-					&& 
-					(observaciones[x][y - 1].isEmpty() || observaciones[x][y - 1].get(0).category != 3)															//lado 1
-					&& 
-					(observaciones[x][y + 1].isEmpty() || observaciones[x][y + 1].get(0).category != 3)															//lado 2*/
+					( observaciones[x - 1][y].isEmpty() || (observaciones[x - 1][y].get(0).category != 4) ) 
+					&& (!(NPC.y == y && NPC.x == x-1) && !(NPC.y == y-1 && NPC.x == x-1) && !(NPC.y == y+1 && NPC.x == x-1) && !(NPC.y == y-2 && NPC.x == x-1) && !(NPC.y == y+2 && NPC.x == x-1))
+					&& (!(NPC.y == y && NPC.x == x-2) && !(NPC.y == y-1 && NPC.x == x-2) && !(NPC.y == y+1 && NPC.x == x-2))
+					&& (!(NPC.y == y && NPC.x == x-3))
 				)
 				posible = true;
 				System.out.println(posible);
@@ -320,31 +261,10 @@ public class AgenteCompeticion extends AbstractPlayer{
 			case ACTION_RIGHT:
 				System.out.println("R");
 				if(
-					( observaciones[x + 1][y].isEmpty() || (observaciones[x + 1][y].get(0).category != 4 /*&& observaciones[x + 1][y].get(0).category != 3*/) ) //1 alante
-					&& (!(NPC.y == y-1 && NPC.x == x+1) && !(NPC.y == y+1 && NPC.x == x+1) && !(NPC.y == y && NPC.x == x+1) && !(NPC.y == y && NPC.x == x+2))
-					//&& (!(NPC.y == y-1 && NPC.x == x) && !(NPC.y == y+1 && NPC.x == x))
-					//&& 			
-					//(Math.abs(NPC.y - y) > 2 && NPC.x - x < 0 && NPC.x - x > 3)
-					//&& 																																					
-					//(x+2 >=x_max && (observaciones[x + 2][y].isEmpty() || observaciones[x + 2][y].get(0).category != 3))												//2 alante
-					//&& 																																						
-					//(x+3 >=x_max && (observaciones[x + 3][y].isEmpty() || observaciones[x + 3][y].get(0).category != 3))												//3 alante
-					//&& 
-					//(observaciones[x + 1][y - 1].isEmpty() || observaciones[x + 1][y - 1].get(0).category != 3)													//diagonal 1
-					//&& 
-					//(observaciones[x + 1][y + 1].isEmpty() || observaciones[x + 1][y + 1].get(0).category != 3)													//diagonal 2
-					/*&& 
-					(x+2 >=x_max && (observaciones[x + 2][y - 1].isEmpty() || observaciones[x + 2][y - 1].get(0).category != 3))										//diagonal2 1
-					&& 
-					(x+2 >=x_max && (observaciones[x + 2][y + 1].isEmpty() || observaciones[x + 2][y + 1].get(0).category != 3))										//diagonal2 2
-					&& 
-					(y-2 < 0 && (observaciones[x + 1][y - 2].isEmpty() || observaciones[x + 1][y - 2].get(0).category != 3))										//diagonal+ 1
-					&& 
-					(y+2 >= y_max && (observaciones[x + 1][y + 2].isEmpty() || observaciones[x + 1][y + 2].get(0).category != 3))									//diagonal+ 2
-					&& 
-					(observaciones[x][y - 1].isEmpty() || observaciones[x][y - 1].get(0).category != 3)															//lado 1
-					&& 
-					(observaciones[x][y + 1].isEmpty() || observaciones[x][y + 1].get(0).category != 3)															//lado 2*/
+					( observaciones[x + 1][y].isEmpty() || (observaciones[x + 1][y].get(0).category != 4) )
+					&& (!(NPC.y == y && NPC.x == x+1) && !(NPC.y == y-1 && NPC.x == x+1) && !(NPC.y == y+1 && NPC.x == x+1) && !(NPC.y == y-2 && NPC.x == x+1) && !(NPC.y == y+2 && NPC.x == x+1))
+					&& (!(NPC.y == y && NPC.x == x+2) && !(NPC.y == y-1 && NPC.x == x+2) && !(NPC.y == y+1 && NPC.x == x+2))
+					&& (!(NPC.y == y && NPC.x == x+3))
 				)
 				posible = true;
 				System.out.println(posible);
