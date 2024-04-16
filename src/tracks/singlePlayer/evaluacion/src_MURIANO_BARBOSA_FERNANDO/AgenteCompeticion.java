@@ -224,7 +224,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 		reinicia_h++;
 		if(!stateObs.getAvatarResources().isEmpty())
 			gemas_act = (stateObs.getAvatarResources().get(6) > 9)? 9 : stateObs.getAvatarResources().get(6);
-		if(gemas_act != gemas_obt && gemas_act < 9 || reinicia_h > 30){
+		if((gemas_act != gemas_obt || reinicia_h > 30) && gemas_act < 9){
 			ArrayList<Observation>[] gemas = stateObs.getResourcesPositions(stateObs.getAvatarPosition());
 			for(int x = 0; x < mapa_h.length; x++){
 				for(int y = 0; y < mapa_h[0].length; y++){
