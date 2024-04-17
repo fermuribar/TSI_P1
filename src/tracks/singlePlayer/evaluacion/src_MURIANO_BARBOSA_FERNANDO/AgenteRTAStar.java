@@ -106,7 +106,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 		if(observaciones[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y - 1].isEmpty() || 
 			observaciones[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y - 1].get(0).category != 4)
 			{
-			c_mas_h_arriba = mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y];
+			c_mas_h_arriba = mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y - 1];
 			if(estado_actual.ori_jugador.x == 0 && estado_actual.ori_jugador.y == -1){
 				c_mas_h_arriba += 1;
 			}else{
@@ -153,7 +153,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 		int segundo_minimo = 0;
 		//System.out.printf("(%d,%d) - ari: %d; aba: %d; izq: %d; der: %d; ->min %d\n", (int) estado_actual.pos_jugador.x, (int) estado_actual.pos_jugador.y, c_mas_h_arriba, c_mas_h_abajo, c_mas_h_izquierda, c_mas_h_derecha, minimo);
 		
-
+		
 		if(c_mas_h_arriba == minimo){
 			accion = Types.ACTIONS.ACTION_UP;
 			segundo_minimo = Math.min(c_mas_h_abajo, Math.min(c_mas_h_izquierda, c_mas_h_derecha));
