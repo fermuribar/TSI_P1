@@ -60,6 +60,13 @@ public class AgenteRTAStar extends AbstractPlayer{
 		tiempoTotalms = 0;
 		nodo_expandidos = 0;
 		n_acciones = 0;
+
+		/*for(int x = 0; x < mapa_h.length; x++){
+			for(int y = 0; y < mapa_h[0].length; y++){
+				System.out.printf("%d\t", mapa_h[x][y]);
+			}
+			System.out.printf("\n");
+		}*/
 	}
 
 
@@ -81,7 +88,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 			repite = false;
 		}
 		n_acciones ++;
-		if(terminado) System.out.printf("(runtime %d; nodos_expand: %d; l_camino: %d)\n",tiempoTotalms, nodo_expandidos, n_acciones);
+		if(terminado && !repite) System.out.printf("(runtime %d; nodos_expand: %d; l_camino: %d)\n",tiempoTotalms, nodo_expandidos, n_acciones);
         return accion;
     }
 
@@ -102,7 +109,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 		nodo_expandidos++;
 
 		//Calculo coste y h de arriba
-		
+		if(0 <= estado_actual.pos_jugador.y - 1 && estado_actual.pos_jugador.y - 1 < observaciones[0].length)
 		if(observaciones[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y - 1].isEmpty() || 
 			observaciones[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y - 1].get(0).category != 4)
 			{
@@ -115,6 +122,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 		}
 
 		//Calculo coste y h de abajo
+		if(0 <= estado_actual.pos_jugador.y + 1 && estado_actual.pos_jugador.y + 1 < observaciones[0].length)
 		if(observaciones[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y + 1].isEmpty() ||
 			observaciones[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y + 1].get(0).category != 4){
 			c_mas_h_abajo = mapa_h[(int) estado_actual.pos_jugador.x][(int) estado_actual.pos_jugador.y + 1];
@@ -126,6 +134,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 		}
 
 		//Calculo coste y h de izq
+		if(0 <= estado_actual.pos_jugador.x - 1 && estado_actual.pos_jugador.x - 1 < observaciones.length)
 		if(observaciones[(int) estado_actual.pos_jugador.x - 1][(int) estado_actual.pos_jugador.y].isEmpty() ||
 			observaciones[(int) estado_actual.pos_jugador.x - 1][(int) estado_actual.pos_jugador.y].get(0).category != 4){
 			c_mas_h_izquierda = mapa_h[(int) estado_actual.pos_jugador.x - 1][(int) estado_actual.pos_jugador.y];
@@ -137,6 +146,7 @@ public class AgenteRTAStar extends AbstractPlayer{
 		}
 
 		//Calculo coste y h de der
+		if(0 <= estado_actual.pos_jugador.x + 1 && estado_actual.pos_jugador.x + 1 < observaciones.length)
 		if(observaciones[(int) estado_actual.pos_jugador.x + 1][(int) estado_actual.pos_jugador.y].isEmpty() || 
 			observaciones[(int) estado_actual.pos_jugador.x + 1][(int) estado_actual.pos_jugador.y].get(0).category != 4){
 			c_mas_h_derecha = mapa_h[(int) estado_actual.pos_jugador.x + 1][(int) estado_actual.pos_jugador.y];

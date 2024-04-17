@@ -45,16 +45,18 @@ public class AgenteAStar extends AbstractPlayer{
 
         mapa_visitables = new boolean[stateObs.getObservationGrid().length][stateObs.getObservationGrid()[0].length];
 
-        ArrayList<Observation>[] lista_no_pasar = stateObs.getImmovablePositions();
         for(int x = 0; x < mapa_visitables.length; x++){
             for(int y = 0; y < mapa_visitables[0].length; y++){
                 mapa_visitables[x][y] = true;
             }
         }
 
+        ArrayList<Observation>[] lista_no_pasar = stateObs.getImmovablePositions();
+        if(lista_no_pasar.length > 0)
         for(int i = 0; i < lista_no_pasar[0].size();i++){   //murons
             mapa_visitables[(int) (lista_no_pasar[0].get(i).position.x / fescala.x)] [(int) (lista_no_pasar[0].get(i).position.y/fescala.x)] = false;
         }
+        if(lista_no_pasar.length > 1)
         for(int i = 0; i < lista_no_pasar[1].size();i++){   //trampas
             mapa_visitables[(int) (lista_no_pasar[1].get(i).position.x / fescala.x)] [(int) (lista_no_pasar[1].get(i).position.y/fescala.x)] = false;
         }
@@ -121,6 +123,9 @@ public class AgenteAStar extends AbstractPlayer{
             hijo_arriba.pos_jugador.y = nodo_actual.pos_jugador.y - 1;
 			hijo_arriba.calcula_h(portal);
             expande = true;
+
+            if(0 <= hijo_arriba.pos_jugador.x && hijo_arriba.pos_jugador.x < mapa_visitables.length 
+            && 0 <= hijo_arriba.pos_jugador.y && hijo_arriba.pos_jugador.y < mapa_visitables[0].length)
             if(!mapa_visitables[(int) hijo_arriba.pos_jugador.x][(int) hijo_arriba.pos_jugador.y]){
                 expande = false;
             }else if(!hijo_arriba.ori_jugador.equals(nodo_actual.ori_jugador)){
@@ -144,6 +149,9 @@ public class AgenteAStar extends AbstractPlayer{
             hijo_abajo.pos_jugador.y = nodo_actual.pos_jugador.y + 1;
 			hijo_abajo.calcula_h(portal);
             expande = true;
+
+            if(0 <= hijo_abajo.pos_jugador.x && hijo_abajo.pos_jugador.x < mapa_visitables.length 
+            && 0 <= hijo_abajo.pos_jugador.y && hijo_abajo.pos_jugador.y < mapa_visitables[0].length)
             if(!mapa_visitables[(int) hijo_abajo.pos_jugador.x][(int) hijo_abajo.pos_jugador.y]){
                 expande = false;
             }else if(!hijo_abajo.ori_jugador.equals(nodo_actual.ori_jugador)){
@@ -167,6 +175,9 @@ public class AgenteAStar extends AbstractPlayer{
             hijo_izq.pos_jugador.y = nodo_actual.pos_jugador.y;
 			hijo_izq.calcula_h(portal);
             expande = true;
+
+            if(0 <= hijo_izq.pos_jugador.x && hijo_izq.pos_jugador.x < mapa_visitables.length 
+            && 0 <= hijo_izq.pos_jugador.y && hijo_izq.pos_jugador.y < mapa_visitables[0].length)
             if(!mapa_visitables[(int) hijo_izq.pos_jugador.x][(int) hijo_izq.pos_jugador.y]){
                 expande = false;
             }else if(!hijo_izq.ori_jugador.equals(nodo_actual.ori_jugador)){
@@ -190,6 +201,9 @@ public class AgenteAStar extends AbstractPlayer{
             hijo_der.pos_jugador.y = nodo_actual.pos_jugador.y;
 			hijo_der.calcula_h(portal);
             expande = true;
+
+            if(0 <= hijo_der.pos_jugador.x && hijo_der.pos_jugador.x < mapa_visitables.length 
+            && 0 <= hijo_der.pos_jugador.y && hijo_der.pos_jugador.y < mapa_visitables[0].length)
             if(!mapa_visitables[(int) hijo_der.pos_jugador.x][(int) hijo_der.pos_jugador.y]){
                 expande = false;
             }else if(!hijo_der.ori_jugador.equals(nodo_actual.ori_jugador)){
