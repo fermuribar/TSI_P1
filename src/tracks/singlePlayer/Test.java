@@ -43,8 +43,8 @@ public class Test {
 		int seed = new Random().nextInt();
 
 		// Game and level to play
-		int gameIdx = 122;
-		int levelIdx = 6; // level names from 0 to 4 (game_lvlN.txt). 4 6
+		int gameIdx = 123;
+		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt). 4 6
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
 		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
@@ -60,8 +60,8 @@ public class Test {
 		// 2. This plays a game in a level by the controller.
 //		ArcadeMachine.runOneGame(game, level1, visuals, AgenteDijkstra, recordActionsFile, seed, 0);
 //		ArcadeMachine.runOneGame(game, level1, visuals, AgenteAStar, recordActionsFile, seed, 0);
-//		ArcadeMachine.runOneGame(game, level1, visuals, AgenteRTAStar, recordActionsFile, seed, 0);
-		ArcadeMachine.runOneGame(game, level1, visuals, AgenteLRTAStar, recordActionsFile, seed, 0);
+		ArcadeMachine.runOneGame(game, level1, visuals, AgenteRTAStar, recordActionsFile, seed, 0);
+//		ArcadeMachine.runOneGame(game, level1, visuals, AgenteLRTAStar, recordActionsFile, seed, 0);
 //		ArcadeMachine.runOneGame(game, level1, visuals, AgenteCompeticion, recordActionsFile, seed, 0);
 
 		// 3. This replays a game from an action file previously recorded

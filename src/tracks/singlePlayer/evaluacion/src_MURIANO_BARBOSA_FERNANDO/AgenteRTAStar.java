@@ -82,13 +82,13 @@ public class AgenteRTAStar extends AbstractPlayer{
 			long tInicio = System.nanoTime();
 			RTAStar(stateObs);
 			long tFin = System.nanoTime();
-			tiempoTotalms += (tFin - tInicio)/1000000;
+			tiempoTotalms += (tFin - tInicio);
 			
 		}else{
 			repite = false;
 		}
 		n_acciones ++;
-		if(terminado && !repite) System.out.printf("(runtime %d; nodos_expand: %d; l_camino: %d)\n",tiempoTotalms, nodo_expandidos, n_acciones);
+		if(terminado && !repite) System.out.printf("(runtime %d; nodos_expand: %d; l_camino: %d)\n",tiempoTotalms/1000000, nodo_expandidos, n_acciones);
         return accion;
     }
 
