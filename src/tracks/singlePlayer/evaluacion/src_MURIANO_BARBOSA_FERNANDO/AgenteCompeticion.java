@@ -80,10 +80,10 @@ public class AgenteCompeticion extends AbstractPlayer{
 		long tInicio = System.nanoTime();
 		RTAStar_mod(stateObs);
 		long tFin = System.nanoTime();
-		tiempoTotalms += (tFin - tInicio)/1000000;
+		tiempoTotalms += (tFin - tInicio);
 			
 		
-		if(terminado) System.out.printf("(runtime %d; nodos_expand: %d)\n",tiempoTotalms, nodo_expandidos);
+		if(terminado) System.out.printf("(runtime %d; nodos_expand: %d)\n",tiempoTotalms/1000000, nodo_expandidos);
         return accion;
     }
 
@@ -236,7 +236,7 @@ public class AgenteCompeticion extends AbstractPlayer{
 		}else if (gemas_act == 9){
 			mapa_heuristico = 1;
 		}
-		if(estado_actual.pos_jugador.equals(portal) && gemas_obt == 9) terminado = true;
+		if(estado_actual.pos_jugador.equals(portal) && mapa_heuristico == 1) terminado = true;
 	}
 
 	private boolean act_posible(StateObservation stateObs, ACTIONS act){
